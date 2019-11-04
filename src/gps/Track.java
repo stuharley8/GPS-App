@@ -41,7 +41,7 @@ public class Track {
         this.name = name;
     }
 
-    private void calcMinAndMaxes() {
+    private void calcMinsAndMaxes() {
         double minLat = points.get(0).getLatitude();
         double minLong = points.get(0).getLongitude();
         double minEle = points.get(0).getElevation();
