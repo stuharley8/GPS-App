@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
-    <name>GPS Test: 2 bad longitudes</name>
+    <name>gps Test: 2 bad longitudes</name>
     <trkseg>
       <trkpt lon="-180.0000000000000" lat="43.30000000000000">
         <ele>200.0000000000000</ele>

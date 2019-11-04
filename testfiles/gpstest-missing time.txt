@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
-    <name>GPS Test: missing time in 2nd trkpt</name>
+    <name>gps Test: missing time in 2nd trkpt</name>
     <trkseg>
       <trkpt lon="-87.90000000000000" lat="43.30000000000000">
         <ele>200.0000000000000</ele>

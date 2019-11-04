@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
-    <name>GPS Test: first 9 times bad, last time good</name>
+    <name>gps Test: first 9 times bad, last time good</name>
     <trkseg>
       <trkpt lon="-87.90000000000000" lat="43.30000000000000">
         <ele>200.0000000000000</ele>
