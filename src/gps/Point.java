@@ -11,9 +11,7 @@ package gps;
 import java.time.Instant;
 
 /**
- * @author harleys
- * @version 1.0
- * @created 04-Nov-2019 1:39:07 AM
+ * Represents a Point in a GPS track
  */
 public class Point {
 
@@ -22,34 +20,34 @@ public class Point {
     private double longitude;
     private Instant time;
 
-    public Point() {
-
-    }
-
     /**
-     * @param latitude
-     * @param longitude
-     * @param elevation
-     * @param time
+     * Constructor
+     * @param latitude the latitude
+     * @param longitude the longitude
+     * @param elevation the elevation
+     * @param time the time
      */
-    public Point(double latitude, double longitude, double elevation, String time) {
-
+    public Point(double latitude, double longitude, double elevation, Instant time) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.elevation = elevation;
+        this.time = time;
     }
 
     public double getElevation() {
-        return 0;
+        return elevation;
     }
 
     public double getLatitude() {
-        return 0;
+        return latitude;
     }
 
     public double getLongitude() {
-        return 0;
+        return longitude;
     }
 
-    public String getTime() {
-        return "";
+    public Instant getTime() {
+        return time;
     }
 
 }

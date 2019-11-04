@@ -13,9 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 /**
- * @author harleys
- * @version 1.0
- * @created 04-Nov-2019 1:39:06 AM
+ * Controller Class for the GPS FXML
  */
 public class Controller {
 
