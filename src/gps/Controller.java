@@ -77,7 +77,7 @@ public class Controller {
         String trackName = trackChoiceBox.getValue();
         int index = -1;
         if(trackName != null) {
-            for (int i = 0; i < gps.getTracks().size(); i++) {
+            for (int i = 0; i < gps.getNumTracks(); i++) {
                 if (trackName.equals(gps.getTrack(i).getName())) {
                     index = i;
                     break;
@@ -141,8 +141,8 @@ public class Controller {
     private void loadChoiceBox() {
         trackChoiceBox.getItems().removeAll();
         choiceBoxList.removeAll();
-        for(Track track : gps.getTracks()) {
-            choiceBoxList.add(track.getName());
+        for(int i = 0; i < gps.getNumTracks(); i++) {
+            choiceBoxList.add(gps.getTrack(i).getName());
         }
         trackChoiceBox.getItems().addAll(choiceBoxList);
     }
