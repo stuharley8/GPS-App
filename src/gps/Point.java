@@ -25,13 +25,13 @@ public class Point {
      * @param latitude the latitude
      * @param longitude the longitude
      * @param elevation the elevation
-     * @param time the time
+     * @param time the time represented as a String in UTC format
      */
-    public Point(double latitude, double longitude, double elevation, Instant time) {
+    public Point(double latitude, double longitude, double elevation, String time) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.elevation = elevation;
-        this.time = time;
+        this.time = Instant.parse(time);
     }
 
     public double getElevation() {

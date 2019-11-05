@@ -2,8 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="250.0" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="250.0" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.Controller">
     <children>
         <MenuBar>
             <menus>
@@ -15,5 +16,131 @@
                 </Menu>
             </menus>
         </MenuBar>
+      <AnchorPane prefHeight="375.0" prefWidth="800.0">
+         <children>
+            <Label layoutX="453.0" layoutY="20.0" text="Metrics" underline="true">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="359.0" layoutY="60.0" text="Min Latitude:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="85.0" text="Min Longitude:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="110.0" text="Min Elevation:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="135.0" text="Max Latitude:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="160.0" text="Max Longitude:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="185.0" text="Max Elevation:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="210.0" text="Max Speed mph:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="235.0" text="Max Speed kph:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="260.0" text="Average Speed mph:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="285.0" text="Average Speed kph:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="359.0" layoutY="310.0" text="Total Distance Miles:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="359.0" layoutY="335.0" text="Total Distance Km:" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="minLatLabel" layoutX="444.0" layoutY="60.0" prefHeight="20.0" prefWidth="348.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="minLongLabel" layoutX="460.0" layoutY="85.0" prefHeight="20.0" prefWidth="332.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="minEleLabel" layoutX="452.0" layoutY="110.0" prefHeight="20.0" prefWidth="341.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="maxLatLabel" layoutX="447.0" layoutY="135.0" prefHeight="20.0" prefWidth="341.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="maxLongLabel" layoutX="460.0" layoutY="160.0" prefHeight="20.0" prefWidth="332.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="maxEleLabel" layoutX="453.0" layoutY="185.0" prefHeight="20.0" prefWidth="332.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="maxSpeedMphLabel" layoutX="469.0" layoutY="210.0" prefHeight="20.0" prefWidth="325.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="maxSpeedKphLabel" layoutX="463.0" layoutY="235.0" prefHeight="20.0" prefWidth="325.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="aveSpeedMphLabel" layoutX="492.0" layoutY="260.0" prefHeight="20.0" prefWidth="296.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="aveSpeedKphLabel" layoutX="488.0" layoutY="285.0" prefHeight="20.0" prefWidth="296.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalDistanceMilesLabel" layoutX="492.0" layoutY="310.0" prefHeight="20.0" prefWidth="296.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalDistanceKmLabel" layoutX="478.0" layoutY="335.0" prefHeight="20.0" prefWidth="312.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="46.0" layoutY="122.0" prefHeight="27.0" prefWidth="245.0" text="Select Track to Display Metrics" underline="true">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ChoiceBox fx:id="trackChoiceBox" layoutX="46.0" layoutY="173.0" prefHeight="25.0" prefWidth="245.0" />
+            <Button layoutX="120.0" layoutY="218.0" mnemonicParsing="false" onAction="#displayOnAction" prefHeight="25.0" prefWidth="84.0" text="Select" />
+         </children>
+      </AnchorPane>
     </children>
 </VBox>

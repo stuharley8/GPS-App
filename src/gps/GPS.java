@@ -28,14 +28,6 @@ public class GPS {
     }
 
     /**
-     * Constructor
-     * @param tracks the list of up to GPS tracks (up to 10)
-     */
-    public GPS(List<Track> tracks) {
-        this.tracks = tracks;
-    }
-
-    /**
      * Adds a track to the list of tracks
      * @param track the track to be
      * @throws IllegalArgumentException if adding a track to tracks would increase
@@ -56,6 +48,10 @@ public class GPS {
      */
     public Track getTrack(int index) {
         return tracks.get(index);
+    }
+
+    public List<Track> getTracks() {
+        return tracks;
     }
 
 }

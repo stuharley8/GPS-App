@@ -30,8 +30,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("GPS.fxml"));
-        primaryStage.setTitle("gps");
-        primaryStage.setScene(new Scene(root, 800, 550));
+        primaryStage.setTitle("GPS");
+        primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.show();
     }
 

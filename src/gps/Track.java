@@ -32,13 +32,21 @@ public class Track {
     private List<Point> points;
 
     /**
-     * Constructor
+     * Constructor. Calculates metrics for the track when initialized.
      * @param points a not null list of points that represents the path of the track.
      * @param name the name of the track
+     * @throws NullPointerException if points is null
+     * @throws IllegalArgumentException if points contains 0 points
      */
     public Track(List<Point> points, String name) {
+        if(points == null) {
+            throw new NullPointerException("List of point is null");
+        } else if(points.size() == 0) {
+            throw new IllegalArgumentException("Track must contain at least one point");
+        }
         this.points = points;
         this.name = name;
+        calcMinsAndMaxes();
     }
 
     private void calcMinsAndMaxes() {
