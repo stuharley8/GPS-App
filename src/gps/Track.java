@@ -28,6 +28,9 @@ public class Track {
     private double minLatitude;
     private double minLongitude;
 
+    private final double METERS_TO_FEET = 3.28084;
+    private final int EARTH_RADIUS_METERS = 6371000;
+
     private String name;
     private List<Point> points;
 
@@ -47,6 +50,8 @@ public class Track {
         this.points = points;
         this.name = name;
         calcMinsAndMaxes();
+        calcDistanceKM();
+        calcDistanceMiles();
     }
 
     private void calcMinsAndMaxes() {
@@ -90,11 +95,43 @@ public class Track {
     }
 
     private void calcDistanceKM() {
+        double deltaX;
+        double deltaY;
+        double deltaZ;
+        double distance;
+        double totalDistance = 0.0;
+        double elevationA;
+        double elevationB;
+        double longA;
+        double longB;
+        double latA;
+        double latB;
 
+        for (int i = 0; i < points.size()-1; i++) {
+            Point pointA = points.get(i);
+            Point pointB = points.get(i+1);
+            elevationA = pointA.getElevation();
+            elevationB = pointB.getElevation();
+            longA = pointA.getLongitude();
+            longB = pointB.getLongitude();
+            latA = pointA.getLatitude();
+            latB = pointB.getLatitude();
+            deltaX = (EARTH_RADIUS_METERS + (elevationB + elevationA) / 2)*(Math.toRadians(Math.abs(longB))-Math.toRadians(Math.abs(longA)))*Math.cos((Math.toRadians(latB)+Math.toRadians(latA))/2);
+            deltaY = (EARTH_RADIUS_METERS + (elevationB + elevationA)/2)*(Math.toRadians(latB)-Math.toRadians(latA));
+            deltaZ = elevationB-elevationA;
+            double radians = 0.0174533;
+//            deltaX = (EARTH_RADIUS_METERS + (elevationB + elevationA) / 2)*(Math.abs(longB*radians)-Math.abs(longA*radians))*Math.cos(((latB*radians)+(latA*radians))/2);
+//            deltaY = (EARTH_RADIUS_METERS + (elevationB + elevationA)/2)*((latB*radians)-(latA*radians));
+//            deltaZ = elevationB-elevationA;
+            distance = deltaX + deltaY + deltaZ;
+            totalDistance += distance;
+        }
+
+        distanceKM = totalDistance/1000.0;
     }
 
     private void calcDistanceMiles() {
-
+        distanceMiles = distanceKM*0.621371;
     }
 
     private void calcMaxSpeedKM() {
@@ -125,6 +162,10 @@ public class Track {
         return maxElevation;
     }
 
+    public double getMaxElevationFt(){
+        return maxElevation*METERS_TO_FEET;
+    }
+
     public double getMaxLatitude() {
         return maxLatitude;
     }
@@ -143,6 +184,10 @@ public class Track {
 
     public double getMinElevation() {
         return minElevation;
+    }
+
+    public double getMinElevationFt(){
+        return minElevation*METERS_TO_FEET;
     }
 
     public double getMinLatitude() {
