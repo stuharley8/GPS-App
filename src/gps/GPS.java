@@ -50,8 +50,8 @@ public class GPS {
         return tracks.get(index);
     }
 
-    public List<Track> getTracks() {
-        return tracks;
+    public int getNumTracks() {
+        return tracks.size();
     }
 
 }
