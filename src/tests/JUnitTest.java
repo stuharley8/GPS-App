@@ -75,8 +75,8 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(2500, gps.getTrack(0).getMaxElevation());
-        //assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56*DELTA);
-        //assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798*DELTA);
+        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56*DELTA);
+        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798*DELTA);
         assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260*DELTA);
         assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133*DELTA);
         assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56*DELTA);

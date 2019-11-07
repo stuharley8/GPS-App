@@ -28,8 +28,8 @@ public class Track {
     private double minLatitude;
     private double minLongitude;
 
-    private final double METERS_TO_FEET = 3.28084;
-    private final int EARTH_RADIUS_METERS = 6371000;
+    private final static double METERS_TO_FEET = 3.28084;
+    private final static int EARTH_RADIUS_METERS = 6371000;
 
     private String name;
     private List<Point> points;
@@ -52,6 +52,7 @@ public class Track {
         calcMinsAndMaxes();
         calcDistanceKM();
         calcDistanceMiles();
+        calcAveSpeeds();
     }
 
     private void calcMinsAndMaxes() {
@@ -86,12 +87,13 @@ public class Track {
         maxLongitude = maxLong;
     }
 
-    private void calcAveSpeedKM() {
-
-    }
-
-    private void calcAveSpeedMiles() {
-
+    private void calcAveSpeeds() {
+        long totalTime = points.get(points.size()-1).getDate().getTime() - points.get(0).getDate().getTime();
+        double seconds = totalTime/1000.0;
+        double minutes = seconds/60;
+        double hours = minutes/60;
+        aveSpeedKM = distanceKM/hours;
+        aveSpeedMiles = distanceMiles/hours;
     }
 
     private void calcDistanceKM() {
@@ -119,11 +121,7 @@ public class Track {
             deltaX = (EARTH_RADIUS_METERS + (elevationB + elevationA) / 2)*(Math.toRadians(Math.abs(longB))-Math.toRadians(Math.abs(longA)))*Math.cos((Math.toRadians(latB)+Math.toRadians(latA))/2);
             deltaY = (EARTH_RADIUS_METERS + (elevationB + elevationA)/2)*(Math.toRadians(latB)-Math.toRadians(latA));
             deltaZ = elevationB-elevationA;
-            double radians = 0.0174533;
-//            deltaX = (EARTH_RADIUS_METERS + (elevationB + elevationA) / 2)*(Math.abs(longB*radians)-Math.abs(longA*radians))*Math.cos(((latB*radians)+(latA*radians))/2);
-//            deltaY = (EARTH_RADIUS_METERS + (elevationB + elevationA)/2)*((latB*radians)-(latA*radians));
-//            deltaZ = elevationB-elevationA;
-            distance = deltaX + deltaY + deltaZ;
+            distance = Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2)+Math.pow(deltaZ, 2));
             totalDistance += distance;
         }
 

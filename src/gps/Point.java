@@ -8,7 +8,9 @@
 
 package gps;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Date;
 
 /**
  * Represents a Point in a GPS track
@@ -18,20 +20,25 @@ public class Point {
     private double elevation;
     private double latitude;
     private double longitude;
-    private Instant time;
+    private Date date;
 
     /**
      * Constructor
      * @param latitude the latitude
      * @param longitude the longitude
      * @param elevation the elevation
-     * @param time the time represented as a String in UTC format
+     * @param date the date represented as a String in UTC format
      */
-    public Point(double latitude, double longitude, double elevation, String time) {
+    public Point(double latitude, double longitude, double elevation, String date) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.elevation = elevation;
-        this.time = Instant.parse(time);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:s'Z'");
+            this.date = sdf.parse(date);
+        } catch (Exception e) {
+            // Should not fail
+        }
     }
 
     public double getElevation() {
@@ -46,8 +53,8 @@ public class Point {
         return longitude;
     }
 
-    public Instant getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 
 }
