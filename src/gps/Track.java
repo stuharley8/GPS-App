@@ -54,6 +54,9 @@ public class Track {
         Calculations();
     }
 
+    /**
+     * Calls all of the necessary calculation methods to display all of the proper metrics
+     */
     private void Calculations(){
         calcMinsAndMaxes();
         for (int i = 0; i < points.size()-1; i++) {
@@ -64,6 +67,11 @@ public class Track {
         aveSpeedCalc();
     }
 
+    /**
+     * Checks if the speed between two points is the new max speed
+     * @param pointA First point values used to calculate speed
+     * @param pointB Second point values used to calculate speed
+     */
     private void maxSpeedCalc(Point pointA, Point pointB){
         double tempKM = distanceCalc(pointA, pointB);
         double tempMiles = tempKM*KM_TO_MILES;
@@ -76,6 +84,12 @@ public class Track {
         }
     }
 
+    /**
+     * Calculates the time difference between two points, in hours
+     * @param pointA First point values used to calculate the time difference
+     * @param pointB Second point values used to calculate the time difference
+     * @return The time difference between pointA and pointB in hours
+     */
     private double timeCalc(Point pointA, Point pointB){
         long totalTime = Math.abs(pointB.getDate().getTime()-pointA.getDate().getTime());
         double seconds = totalTime/1000;
@@ -83,12 +97,22 @@ public class Track {
         return minutes/60;
     }
 
+    /**
+     * Calculates the distance between two points
+     * @param pointA First point values used to calculate the distance
+     * @param pointB Second point values used to calculate the distance
+     * @return The distance value between pointA and pointB in kilometers
+     */
     private double distanceCalc(Point pointA, Point pointB){
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)*(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))*Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
         double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation())/2)*(Math.toRadians(pointB.getLatitude())-Math.toRadians(pointA.getLatitude()));
         double deltaZ = pointB.getElevation() - pointA.getElevation();
         return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2)+Math.pow(deltaZ, 2))/1000;
     }
+
+    /**
+     * Calculates the average speed across the entire track of points
+     */
     private void aveSpeedCalc(){
         if(points.size() > 1) {
             aveSpeedKM = distanceKM/timeCalc(points.get(points.size()-1), points.get(0));
@@ -99,6 +123,9 @@ public class Track {
         }
     }
 
+    /**
+     * Finds the Min and Max values for the Latitude, Longitude, and Elevation in the track
+     */
     private void calcMinsAndMaxes() {
         double minLat = points.get(0).getLatitude();
         double minLong = points.get(0).getLongitude();
