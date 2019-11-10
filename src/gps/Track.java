@@ -22,14 +22,15 @@ public class Track {
     private double maxElevation;
     private double maxLatitude;
     private double maxLongitude;
-    private double maxSpeedKM;
-    private double maxSpeedMiles;
+    private double maxSpeedKM = 0.0;
+    private double maxSpeedMiles = 0.0;
     private double minElevation;
     private double minLatitude;
     private double minLongitude;
 
     private final static double METERS_TO_FEET = 3.28084;
     private final static int EARTH_RADIUS_METERS = 6371000;
+    private final static double KM_TO_MILES = 0.621371;
 
     private String name;
     private List<Point> points;
@@ -50,9 +51,52 @@ public class Track {
         this.points = points;
         this.name = name;
         calcMinsAndMaxes();
-        calcDistanceKM();
-        calcDistanceMiles();
-        calcAveSpeeds();
+        Calculations();
+    }
+
+    private void Calculations(){
+        calcMinsAndMaxes();
+        for (int i = 0; i < points.size()-1; i++) {
+            distanceKM += distanceCalc(points.get(i), points.get(i+1));
+            maxSpeedCalc(points.get(i), points.get(i+1));
+        }
+        distanceMiles = distanceKM*KM_TO_MILES;
+        aveSpeedCalc();
+    }
+
+    private void maxSpeedCalc(Point pointA, Point pointB){
+        double tempKM = distanceCalc(pointA, pointB);
+        double tempMiles = tempKM*KM_TO_MILES;
+        double speedKM = tempKM/timeCalc(pointA, pointB);
+        double speedMiles = tempMiles/timeCalc(pointA, pointB);
+        System.out.println(speedKM);
+        if(speedKM > maxSpeedKM){
+            maxSpeedKM = speedKM;
+            maxSpeedMiles = speedMiles;
+        }
+    }
+
+    private double timeCalc(Point pointA, Point pointB){
+        long totalTime = Math.abs(pointB.getDate().getTime()-pointA.getDate().getTime());
+        double seconds = totalTime/1000;
+        double minutes = seconds/60;
+        return minutes/60;
+    }
+
+    private double distanceCalc(Point pointA, Point pointB){
+        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)*(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))*Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
+        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation())/2)*(Math.toRadians(pointB.getLatitude())-Math.toRadians(pointA.getLatitude()));
+        double deltaZ = pointB.getElevation() - pointA.getElevation();
+        return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2)+Math.pow(deltaZ, 2))/1000;
+    }
+    private void aveSpeedCalc(){
+        if(points.size() > 1) {
+            aveSpeedKM = distanceKM/timeCalc(points.get(points.size()-1), points.get(0));
+            aveSpeedMiles = distanceMiles/timeCalc(points.get(points.size()-1), points.get(0));
+        }else{
+            aveSpeedKM = 0.0;
+            aveSpeedMiles = 0.0;
+        }
     }
 
     private void calcMinsAndMaxes() {
@@ -85,59 +129,6 @@ public class Track {
         maxElevation = maxEle;
         maxLatitude = maxLat;
         maxLongitude = maxLong;
-    }
-
-    private void calcAveSpeeds() {
-        long totalTime = points.get(points.size()-1).getDate().getTime() - points.get(0).getDate().getTime();
-        double seconds = totalTime/1000.0;
-        double minutes = seconds/60;
-        double hours = minutes/60;
-        aveSpeedKM = distanceKM/hours;
-        aveSpeedMiles = distanceMiles/hours;
-    }
-
-    private void calcDistanceKM() {
-        double deltaX;
-        double deltaY;
-        double deltaZ;
-        double distance;
-        double totalDistance = 0.0;
-        double elevationA;
-        double elevationB;
-        double longA;
-        double longB;
-        double latA;
-        double latB;
-
-        for (int i = 0; i < points.size()-1; i++) {
-            Point pointA = points.get(i);
-            Point pointB = points.get(i+1);
-            elevationA = pointA.getElevation();
-            elevationB = pointB.getElevation();
-            longA = pointA.getLongitude();
-            longB = pointB.getLongitude();
-            latA = pointA.getLatitude();
-            latB = pointB.getLatitude();
-            deltaX = (EARTH_RADIUS_METERS + (elevationB + elevationA) / 2)*(Math.toRadians(Math.abs(longB))-Math.toRadians(Math.abs(longA)))*Math.cos((Math.toRadians(latB)+Math.toRadians(latA))/2);
-            deltaY = (EARTH_RADIUS_METERS + (elevationB + elevationA)/2)*(Math.toRadians(latB)-Math.toRadians(latA));
-            deltaZ = elevationB-elevationA;
-            distance = Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2)+Math.pow(deltaZ, 2));
-            totalDistance += distance;
-        }
-
-        distanceKM = totalDistance/1000.0;
-    }
-
-    private void calcDistanceMiles() {
-        distanceMiles = distanceKM*0.621371;
-    }
-
-    private void calcMaxSpeedKM() {
-
-    }
-
-    private void calcMaxSpeedMiles() {
-
     }
 
     public double getAveSpeedKM() {
