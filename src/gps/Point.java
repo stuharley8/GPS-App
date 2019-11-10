@@ -26,20 +26,28 @@ public class Point {
      * Constructor
      * @param latitude the latitude
      * @param longitude the longitude
-     * @param elevation the elevation
-     * @param date the date represented as a String in UTC format
      */
-    public Point(double latitude, double longitude, double elevation, String date) {
+    public Point(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.elevation = elevation;
+        this.elevation = -1;
+        this.date = null;
+
+    }
+
+    public void setDate(String time){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:s'Z'");
-            this.date = sdf.parse(date);
+            this.date = sdf.parse(time);
         } catch (Exception e) {
             // Should not fail
         }
     }
+
+    public void setElevation(double elevation){
+        this.elevation = elevation;
+    }
+
 
     public double getElevation() {
         return elevation;

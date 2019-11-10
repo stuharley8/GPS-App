@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -126,6 +127,20 @@ public class Controller {
         fileChooser.setInitialDirectory(new File(currentPath));
         try {
             File file = fileChooser.showOpenDialog(null);
+            GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+            AbstractParserEventHandler handler = gpsTrackBuilder;
+            handler.enableLogging(true);
+            Parser parser;
+            try {
+                parser = new Parser(handler);
+                parser.parse(file.toString());
+                gps.addTrack(gpsTrackBuilder.loadedTrack());
+            } catch (SAXException e){
+                System.out.println("Parser threw SAXException: " + e.getMessage());
+                System.out.println("The error occurred near line " + handler.getLine() + ", col " + handler.getColumn());
+            } catch (Exception e) {
+                System.out.println("Parser threw Exception: " + e.getMessage());
+            }
             //TODO: Parser Stuff
             loadChoiceBox();
         } catch (Exception e) {
