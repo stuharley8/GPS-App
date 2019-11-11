@@ -35,6 +35,24 @@ public class Point {
 
     }
 
+    /**
+     * Constructor used for testing
+     * @param latitude the latitude
+     * @param longitude the longitude
+     * @param elevation the elevation
+     * @param date the date as a String in UTC format
+     */
+    public Point(double latitude, double longitude, double elevation, String date) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.elevation = elevation;
+        setDate(date);
+    }
+
+    /**
+     * Sets the date of the point object
+     * @param time the date represented as a String in UTC format
+     */
     public void setDate(String time){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:s'Z'");

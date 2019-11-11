@@ -34,6 +34,9 @@ public class Controller {
     private ChoiceBox<String> trackChoiceBox;
 
     @FXML
+    private Label metricsLabel;
+
+    @FXML
     private Label minLatLabel;
 
     @FXML
@@ -85,6 +88,7 @@ public class Controller {
                 }
             }
             if (index != -1) {
+                metricsLabel.setText(trackName);
                 updateMetrics(index);
             }
         }
@@ -123,7 +127,7 @@ public class Controller {
     public void loadOnAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-                "GPS Files", "*.txt", ".gpx"));
+                "GPS Files", "*.txt", "*.gpx"));
         fileChooser.setInitialDirectory(new File(currentPath));
         try {
             File file = fileChooser.showOpenDialog(null);
@@ -135,14 +139,14 @@ public class Controller {
                 parser = new Parser(handler);
                 parser.parse(file.toString());
                 gps.addTrack(gpsTrackBuilder.loadedTrack());
+                updateChoiceBox();
             } catch (SAXException e){
                 System.out.println("Parser threw SAXException: " + e.getMessage());
-                System.out.println("The error occurred near line " + handler.getLine() + ", col " + handler.getColumn());
+                System.out.println("The error occurred near line " + handler.getLine()
+                        + ", col " + handler.getColumn());
             } catch (Exception e) {
                 System.out.println("Parser threw Exception: " + e.getMessage());
             }
-            //TODO: Parser Stuff
-            loadChoiceBox();
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
@@ -153,13 +157,11 @@ public class Controller {
     }
 
     @FXML
-    private void loadChoiceBox() {
-        trackChoiceBox.getItems().removeAll();
-        choiceBoxList.removeAll();
-        for(int i = 0; i < gps.getNumTracks(); i++) {
+    private void updateChoiceBox() {
+        for(int i = gps.getNumTracks()-1; i < gps.getNumTracks(); i++) {
             choiceBoxList.add(gps.getTrack(i).getName());
+            trackChoiceBox.getItems().add(choiceBoxList.get(i));
         }
-        trackChoiceBox.getItems().addAll(choiceBoxList);
     }
 
 }

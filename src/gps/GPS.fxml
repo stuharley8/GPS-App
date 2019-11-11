@@ -18,7 +18,7 @@
         </MenuBar>
       <AnchorPane prefHeight="375.0" prefWidth="800.0">
          <children>
-            <Label layoutX="453.0" layoutY="20.0" text="Metrics" underline="true">
+            <Label layoutX="359.0" layoutY="20.0" text="Metrics:" underline="true">
                <font>
                   <Font size="18.0" />
                </font>
@@ -140,6 +140,11 @@
             </Label>
             <ChoiceBox fx:id="trackChoiceBox" layoutX="46.0" layoutY="173.0" prefHeight="25.0" prefWidth="245.0" />
             <Button layoutX="120.0" layoutY="218.0" mnemonicParsing="false" onAction="#displayOnAction" prefHeight="25.0" prefWidth="84.0" text="Select" />
+            <Label fx:id="metricsLabel" layoutX="429.0" layoutY="20.0" prefHeight="27.0" prefWidth="800.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
     </children>

@@ -28,9 +28,9 @@ public class Track {
     private double minLatitude;
     private double minLongitude;
 
-    private final static double METERS_TO_FEET = 3.28084;
-    private final static int EARTH_RADIUS_METERS = 6371000;
-    private final static double KM_TO_MILES = 0.621371;
+    private static final double METERS_TO_FEET = 3.28084;
+    private static final int EARTH_RADIUS_METERS = 6371000;
+    private static final double KM_TO_MILES = 0.621371;
 
     private String name;
     private List<Point> points;
@@ -50,14 +50,13 @@ public class Track {
         }
         this.points = points;
         this.name = name;
-        calcMinsAndMaxes();
-        Calculations();
+        calculations();
     }
 
     /**
      * Calls all of the necessary calculation methods to display all of the proper metrics
      */
-    private void Calculations(){
+    private void calculations() {
         calcMinsAndMaxes();
         for (int i = 0; i < points.size()-1; i++) {
             distanceKM += distanceCalc(points.get(i), points.get(i+1));
@@ -77,7 +76,6 @@ public class Track {
         double tempMiles = tempKM*KM_TO_MILES;
         double speedKM = tempKM/timeCalc(pointA, pointB);
         double speedMiles = tempMiles/timeCalc(pointA, pointB);
-        System.out.println(speedKM);
         if(speedKM > maxSpeedKM){
             maxSpeedKM = speedKM;
             maxSpeedMiles = speedMiles;
@@ -92,7 +90,7 @@ public class Track {
      */
     private double timeCalc(Point pointA, Point pointB){
         long totalTime = Math.abs(pointB.getDate().getTime()-pointA.getDate().getTime());
-        double seconds = totalTime/1000;
+        double seconds = totalTime/1000.0;
         double minutes = seconds/60;
         return minutes/60;
     }
@@ -104,8 +102,11 @@ public class Track {
      * @return The distance value between pointA and pointB in kilometers
      */
     private double distanceCalc(Point pointA, Point pointB){
-        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)*(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))*Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
-        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation())/2)*(Math.toRadians(pointB.getLatitude())-Math.toRadians(pointA.getLatitude()));
+        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)
+                *(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))
+                *Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
+        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation())/2)
+                *(Math.toRadians(pointB.getLatitude())-Math.toRadians(pointA.getLatitude()));
         double deltaZ = pointB.getElevation() - pointA.getElevation();
         return Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2)+Math.pow(deltaZ, 2))/1000;
     }
@@ -117,7 +118,7 @@ public class Track {
         if(points.size() > 1) {
             aveSpeedKM = distanceKM/timeCalc(points.get(points.size()-1), points.get(0));
             aveSpeedMiles = distanceMiles/timeCalc(points.get(points.size()-1), points.get(0));
-        }else{
+        } else {
             aveSpeedKM = 0.0;
             aveSpeedMiles = 0.0;
         }

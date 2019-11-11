@@ -8,16 +8,16 @@
 
 package tests;
 
-import gps.GPS;
-import gps.Point;
-import gps.Track;
+import gps.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tester class for the GPS application
@@ -25,10 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JUnitTest {
 
     private static final double DELTA = .02; //Signifies 1 percent margin of error
-
-    // GPSTrackBuilder gtb = new GPSTrackBuilder();
-    //Parser p = new Parser(gtb);
-    //p.parse("GPSTest5Center.txt)
 
     /**
      * Tests metrics for GPSTest1.gpx file. Values are hardcoded. (Does not use the parser).
@@ -47,7 +43,6 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(500, gps.getTrack(0).getMaxElevation());
-        // TODO Determine Expected Values for following assertEquals
         assertEquals(0, gps.getTrack(0).getAveSpeedKM());
         assertEquals(0, gps.getTrack(0).getAveSpeedMiles());
         assertEquals(0, gps.getTrack(0).getDistanceKM());
@@ -112,9 +107,8 @@ public class JUnitTest {
         assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85*DELTA);
         assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464*DELTA);
         assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9*DELTA);
-        // TODO Determine Expected Values for following assertEquals
-        assertEquals(0, gps.getTrack(0).getMaxSpeedKM(), 0*DELTA);
-        assertEquals(0, gps.getTrack(0).getMaxSpeedMiles(), 0*DELTA);
+        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7*DELTA);
+        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5*DELTA);
     }
 
     /**
@@ -143,12 +137,135 @@ public class JUnitTest {
         assertEquals(-88, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(3000, gps.getTrack(0).getMaxElevation());
-//        assertEquals(49.26666, gps.getTrack(0).getAveSpeedKM(), 49.26666*DELTA);
-//        assertEquals(30.6128866, gps.getTrack(0).getAveSpeedMiles(), 30.6128866*DELTA);
+        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26*DELTA);
+        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61*DELTA);
         assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9*DELTA);
         assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919*DELTA);
-        // TODO Determine Expected Values for following assertEquals
-        assertEquals(0, gps.getTrack(0).getMaxSpeedKM(), 0*DELTA);
-        assertEquals(0, gps.getTrack(0).getMaxSpeedMiles(), 0*DELTA);
+        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67*DELTA);
+        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24*DELTA);
+    }
+
+    /**
+     * Tests metrics for GPSTest1.gpx file. Uses the Parser.
+     */
+    @Test
+    public void testGPSTest1MetricsParser() {
+        GPS gps = new GPS();
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\GPSTest1.gpx");
+            gps.addTrack(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(43.3, gps.getTrack(0).getMinLatitude());
+        assertEquals(43.3, gps.getTrack(0).getMaxLatitude());
+        assertEquals(-87.9, gps.getTrack(0).getMinLongitude());
+        assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
+        assertEquals(500, gps.getTrack(0).getMinElevation());
+        assertEquals(500, gps.getTrack(0).getMaxElevation());
+        assertEquals(0, gps.getTrack(0).getAveSpeedKM());
+        assertEquals(0, gps.getTrack(0).getAveSpeedMiles());
+        assertEquals(0, gps.getTrack(0).getDistanceKM());
+        assertEquals(0, gps.getTrack(0).getDistanceMiles());
+        assertEquals(0, gps.getTrack(0).getMaxSpeedKM());
+        assertEquals(0, gps.getTrack(0).getMaxSpeedMiles());
+    }
+
+    /**
+     * Tests metrics for GPSTest2.gpx file. Uses the Parser.
+     */
+    @Test
+    public void testGPSTest2MetricsParser() {
+        GPS gps = new GPS();
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\GPSTest2.gpx");
+            gps.addTrack(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(43.3, gps.getTrack(0).getMinLatitude());
+        assertEquals(43.3, gps.getTrack(0).getMaxLatitude());
+        assertEquals(-88, gps.getTrack(0).getMinLongitude());
+        assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
+        assertEquals(500, gps.getTrack(0).getMinElevation());
+        assertEquals(2500, gps.getTrack(0).getMaxElevation());
+        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56*DELTA);
+        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798*DELTA);
+        assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260*DELTA);
+        assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133*DELTA);
+        assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56*DELTA);
+        assertEquals(30.798, gps.getTrack(0).getMaxSpeedMiles(), 30.798*DELTA);
+    }
+
+    /**
+     * Tests metrics for GPSTest5Center.txt file. Uses the Parser.
+     */
+    @Test
+    public void testGPSTest5CenterMetricsParser() {
+        GPS gps = new GPS();
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\GPSTest5Center.txt");
+            gps.addTrack(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(43.3, gps.getTrack(0).getMinLatitude());
+        assertEquals(43.4, gps.getTrack(0).getMaxLatitude());
+        assertEquals(-88, gps.getTrack(0).getMinLongitude());
+        assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
+        assertEquals(500, gps.getTrack(0).getMinElevation());
+        assertEquals(500, gps.getTrack(0).getMaxElevation());
+        assertEquals(57.696, gps.getTrack(0).getAveSpeedKM(), 57.696*DELTA);
+        assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85*DELTA);
+        assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464*DELTA);
+        assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9*DELTA);
+        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7*DELTA);
+        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5*DELTA);
+    }
+
+    /**
+     * Tests Metrics for GPSTest10.gpx file. Uses the Parser.
+     */
+    @Test
+    public void testGPSTest10MetricsParser() {
+        GPS gps = new GPS();
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\GPSTest10.gpx");
+            gps.addTrack(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(43.3, gps.getTrack(0).getMinLatitude());
+        assertEquals(43.3, gps.getTrack(0).getMaxLatitude());
+        assertEquals(-88.9, gps.getTrack(0).getMinLongitude());
+        assertEquals(-88, gps.getTrack(0).getMaxLongitude());
+        assertEquals(500, gps.getTrack(0).getMinElevation());
+        assertEquals(3000, gps.getTrack(0).getMaxElevation());
+        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26*DELTA);
+        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61*DELTA);
+        assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9*DELTA);
+        assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919*DELTA);
+        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67*DELTA);
+        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24*DELTA);
     }
 }
