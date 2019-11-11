@@ -2,11 +2,7 @@ package gps;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.security.sasl.SaslException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +23,11 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
     private List<Point> track; // You need to declare some kind of coordinate collection class here.
     private String name;
     private Point currentPoint;
+
+    @Override
+    protected void log(String prefix, String data) {
+        return; // So it doesn't print to the console
+    }
 
     @Override
     // This method is called whenever the Parser encounters a new element tag
@@ -74,7 +75,6 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
                 throw new SAXException("<name> element found in illegal location");
             }
             currentState = PossibleStates.NAME;
-//            name = atts.getValue(0); //TODO: SEE IF THIS WORKS
         }
 
         // this is the trkseg getting nothing
@@ -122,7 +122,11 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             } else {
                 throw new SAXException("<trkpt> element has one or more illegal attributes: " + firstAtt + ":" + secondAtt);
             }
-            currentPoint = new Point(latitude, longitude);
+            try {
+                currentPoint = new Point(latitude, longitude);
+            } catch (IllegalArgumentException e) {
+                throw new SAXException(e.getMessage());
+            }
         }
 
         if (localName.equalsIgnoreCase("ele")) {
@@ -257,7 +261,11 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             if (s.isEmpty()) {
                 throw new SAXException("</time> attribute is empty!");
             }
-            currentPoint.setDate(s);
+            try {
+                currentPoint.setDate(s);
+            } catch (IllegalArgumentException e) {
+                throw new SAXException(e.getMessage());
+            }
         }
 
         if (currentState == PossibleStates.ELE){
@@ -289,10 +297,10 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
     }
 
     /**
-     *
-     * @return
+     * Constructs the track loaded with the points created by the Track Builder parsing the xml file
+     * @return the loaded track
      */
-    public Track loadedTrack(){
+    public Track loadedTrack() {
         return new Track(track, name);
     }
 }

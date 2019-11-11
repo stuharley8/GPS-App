@@ -9,7 +9,6 @@
 package gps;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -22,12 +21,22 @@ public class Point {
     private double longitude;
     private Date date;
 
+    private static final double MAX_LATITUDE = 90;
+    private static final double MAX_LONGITUDE = 180;
+
     /**
-     * Constructor
+     * Constructor. Sets base values of elevation and date which will be added later.
      * @param latitude the latitude
      * @param longitude the longitude
+     * @throws IllegalArgumentException if the latitude or longitude is invalid
      */
     public Point(double latitude, double longitude) {
+        if(Math.abs(latitude) > MAX_LATITUDE) {
+            throw new IllegalArgumentException("Invalid latitude of " + latitude);
+        }
+        if(Math.abs(longitude) > MAX_LONGITUDE) {
+            throw new IllegalArgumentException("Invalid longitude of " + longitude);
+        }
         this.latitude = latitude;
         this.longitude = longitude;
         this.elevation = -1;
@@ -52,13 +61,14 @@ public class Point {
     /**
      * Sets the date of the point object
      * @param time the date represented as a String in UTC format
+     * @throws IllegalArgumentException if there is a problem parsing the provided time
      */
-    public void setDate(String time){
+    public void setDate(String time) throws IllegalArgumentException {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:s'Z'");
             this.date = sdf.parse(time);
         } catch (Exception e) {
-            // Should not fail
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

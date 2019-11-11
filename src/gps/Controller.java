@@ -17,6 +17,8 @@ import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Paths;
 
 /**
@@ -29,6 +31,8 @@ public class Controller {
     private GPS gps = new GPS();
 
     String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+
+    static Alert ALERT = new Alert(Alert.AlertType.ERROR);
 
     @FXML
     private ChoiceBox<String> trackChoiceBox;
@@ -103,12 +107,12 @@ public class Controller {
         maxLatLabel.setText(tempTrack.getMaxLatitude() + "");
         maxLongLabel.setText(tempTrack.getMaxLongitude() + "");
         maxEleLabel.setText(tempTrack.getMaxElevation() + "");
-        maxSpeedMphLabel.setText(tempTrack.getMaxSpeedMiles() + "");
-        maxSpeedKphLabel.setText(tempTrack.getMaxSpeedKM() + "");
-        aveSpeedMphLabel.setText(tempTrack.getAveSpeedMiles() + "");
-        aveSpeedKphLabel.setText(tempTrack.getAveSpeedKM() + "");
-        totalDistanceMilesLabel.setText(tempTrack.getDistanceMiles() + "");
-        totalDistanceKmLabel.setText(tempTrack.getDistanceKM() + "");
+        maxSpeedMphLabel.setText(round(tempTrack.getMaxSpeedMiles(),2) + "");
+        maxSpeedKphLabel.setText(round(tempTrack.getMaxSpeedKM(), 2) + "");
+        aveSpeedMphLabel.setText(round(tempTrack.getAveSpeedMiles(), 2) + "");
+        aveSpeedKphLabel.setText(round(tempTrack.getAveSpeedKM(), 2) + "");
+        totalDistanceMilesLabel.setText(round(tempTrack.getDistanceMiles(), 2) + "");
+        totalDistanceKmLabel.setText(round(tempTrack.getDistanceKM(), 2) + "");
     }
 
     /**
@@ -132,27 +136,30 @@ public class Controller {
         try {
             File file = fileChooser.showOpenDialog(null);
             GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
-            AbstractParserEventHandler handler = gpsTrackBuilder;
-            handler.enableLogging(true);
+            gpsTrackBuilder.enableLogging(true);
             Parser parser;
             try {
-                parser = new Parser(handler);
+                parser = new Parser(gpsTrackBuilder);
                 parser.parse(file.toString());
                 gps.addTrack(gpsTrackBuilder.loadedTrack());
                 updateChoiceBox();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Track Loaded Successfully");
+                alert.setHeaderText(gpsTrackBuilder.loadedTrack().getName());
+                alert.setContentText("The track has " + gpsTrackBuilder.loadedTrack().getNumPoints() + " point(s)");
+                alert.showAndWait();
             } catch (SAXException e){
-                System.out.println("Parser threw SAXException: " + e.getMessage());
-                System.out.println("The error occurred near line " + handler.getLine()
-                        + ", col " + handler.getColumn());
-            } catch (Exception e) {
-                System.out.println("Parser threw Exception: " + e.getMessage());
+                ALERT.setTitle("Error Dialog");
+                ALERT.setHeaderText("Parser SAX Exception");
+                ALERT.setContentText(e.getMessage() + "\nThe error occurred near line "
+                        + gpsTrackBuilder.getLine() + ", col " + gpsTrackBuilder.getColumn());
+                ALERT.showAndWait();
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("File Error");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            ALERT.setTitle("Error Dialog");
+            ALERT.setHeaderText("File Error");
+            ALERT.setContentText(e.getMessage());
+            ALERT.showAndWait();
         }
     }
 
@@ -164,4 +171,9 @@ public class Controller {
         }
     }
 
+    private static double round(double value, int places) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 }

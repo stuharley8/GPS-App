@@ -8,7 +8,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -37,8 +36,9 @@ public class Parser {
      * @throws Exception            if something goes wrong creating the parser (highly unlikely). Details are supplied in the accompanying message.
      */
     public Parser(AbstractParserEventHandler eventHandler) throws Exception {
-        if (eventHandler == null)
+        if (eventHandler == null) {
             throw new NullPointerException("Parser constructor: Event Handler reference cannot be null!");
+        }
 
         parserEventHandler = eventHandler;
 

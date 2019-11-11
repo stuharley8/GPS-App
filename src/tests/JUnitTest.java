@@ -10,8 +10,8 @@ package tests;
 
 import gps.*;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class JUnitTest {
 
-    private static final double DELTA = .02; //Signifies 1 percent margin of error
+    private static final double DELTA = .02; //Signifies a 2 percent margin of error
 
     /**
      * Tests metrics for GPSTest1.gpx file. Values are hardcoded. (Does not use the parser).
@@ -267,5 +267,165 @@ public class JUnitTest {
         assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919*DELTA);
         assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67*DELTA);
         assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24*DELTA);
+    }
+
+    /**
+     * Tests the parser if bad latitudes are entered
+     */
+    @Test
+    public void testBadLatitudes() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-bad latitudes.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("Invalid latitude of -90.1", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if bad latitudes are entered
+     */
+    @Test
+    public void testBadLongitudes() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-bad longitudes.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("Invalid longitude of -180.1", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if bad times are entered
+     */
+    @Test
+    public void testBadTimes() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-bad times.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("Unparseable date: \"2014-10-19X13:17:30Z\"", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if an elevation is missing
+     */
+    @Test
+    public void testMissingElevation() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-missing elevation.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("</trkpt> element is missing a <ele> subelement or attribute! line 17, col 15", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if a latitude is missing
+     */
+    @Test
+    public void testMissingLatitude() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-missing latitude.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if a longitude is missing
+     */
+    @Test
+    public void testMissingLongitude() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-missing longitude.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if a time is missing
+     */
+    @Test
+    public void testMissingTime() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\gpstest-missing time.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("</trkpt> element is missing a <time> subelement or attribute! line 13, col 14", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the parser if the gpx xml tag is invalid
+     */
+    @Test
+    public void testInvalidGPXTAG() {
+        GPS gps = new GPS();
+        AbstractParserEventHandler handler = new GPSTrackBuilder();
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\InvalidGPX.txt");
+            fail();
+        } catch (SAXException e) {
+            assertEquals("Expected <gpx> element at this location! line 2, col 6", e.getMessage());
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

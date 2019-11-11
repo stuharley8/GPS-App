@@ -8,6 +8,8 @@
 
 package gps;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -71,7 +73,7 @@ public class Track {
      * @param pointA First point values used to calculate speed
      * @param pointB Second point values used to calculate speed
      */
-    private void maxSpeedCalc(Point pointA, Point pointB){
+    private void maxSpeedCalc(Point pointA, Point pointB) {
         double tempKM = distanceCalc(pointA, pointB);
         double tempMiles = tempKM*KM_TO_MILES;
         double speedKM = tempKM/timeCalc(pointA, pointB);
@@ -88,7 +90,7 @@ public class Track {
      * @param pointB Second point values used to calculate the time difference
      * @return The time difference between pointA and pointB in hours
      */
-    private double timeCalc(Point pointA, Point pointB){
+    private double timeCalc(Point pointA, Point pointB) {
         long totalTime = Math.abs(pointB.getDate().getTime()-pointA.getDate().getTime());
         double seconds = totalTime/1000.0;
         double minutes = seconds/60;
@@ -101,7 +103,7 @@ public class Track {
      * @param pointB Second point values used to calculate the distance
      * @return The distance value between pointA and pointB in kilometers
      */
-    private double distanceCalc(Point pointA, Point pointB){
+    private double distanceCalc(Point pointA, Point pointB) {
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)
                 *(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))
                 *Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
@@ -114,7 +116,7 @@ public class Track {
     /**
      * Calculates the average speed across the entire track of points
      */
-    private void aveSpeedCalc(){
+    private void aveSpeedCalc() {
         if(points.size() > 1) {
             aveSpeedKM = distanceKM/timeCalc(points.get(points.size()-1), points.get(0));
             aveSpeedMiles = distanceMiles/timeCalc(points.get(points.size()-1), points.get(0));
@@ -179,10 +181,6 @@ public class Track {
         return maxElevation;
     }
 
-    public double getMaxElevationFt(){
-        return maxElevation*METERS_TO_FEET;
-    }
-
     public double getMaxLatitude() {
         return maxLatitude;
     }
@@ -201,10 +199,6 @@ public class Track {
 
     public double getMinElevation() {
         return minElevation;
-    }
-
-    public double getMinElevationFt(){
-        return minElevation*METERS_TO_FEET;
     }
 
     public double getMinLatitude() {
