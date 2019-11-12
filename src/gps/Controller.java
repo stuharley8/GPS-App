@@ -113,6 +113,13 @@ public class Controller {
         aveSpeedKphLabel.setText(round(tempTrack.getAveSpeedKM(), 2) + "");
         totalDistanceMilesLabel.setText(round(tempTrack.getDistanceMiles(), 2) + "");
         totalDistanceKmLabel.setText(round(tempTrack.getDistanceKM(), 2) + "");
+        if(tempTrack.getNumPoints() == 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Track Contains 1 Point");
+            alert.setHeaderText(tempTrack.getName());
+            alert.setContentText("Speed and Distance metrics cannot be calculated for a track with only 1 point");
+            alert.showAndWait();
+        }
     }
 
     /**
@@ -143,7 +150,7 @@ public class Controller {
                 parser.parse(file.toString());
                 gps.addTrack(gpsTrackBuilder.loadedTrack());
                 updateChoiceBox();
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Track Loaded Successfully");
                 alert.setHeaderText(gpsTrackBuilder.loadedTrack().getName());
                 alert.setContentText("The track has " + gpsTrackBuilder.loadedTrack().getNumPoints() + " point(s)");
@@ -154,6 +161,8 @@ public class Controller {
                 ALERT.setContentText(e.getMessage() + "\nThe error occurred near line "
                         + gpsTrackBuilder.getLine() + ", col " + gpsTrackBuilder.getColumn());
                 ALERT.showAndWait();
+            } catch (NullPointerException e) {
+                // If they exit out of the filechooser window without choosing a file
             }
         } catch (Exception e) {
             ALERT.setTitle("Error Dialog");

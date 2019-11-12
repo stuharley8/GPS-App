@@ -8,8 +8,6 @@
 
 package gps;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -30,7 +28,6 @@ public class Track {
     private double minLatitude;
     private double minLongitude;
 
-    private static final double METERS_TO_FEET = 3.28084;
     private static final int EARTH_RADIUS_METERS = 6371000;
     private static final double KM_TO_MILES = 0.621371;
 
@@ -106,7 +103,7 @@ public class Track {
     private double distanceCalc(Point pointA, Point pointB) {
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation()+pointA.getElevation())/2)
                 *(Math.toRadians(Math.abs(pointB.getLongitude()))-Math.toRadians(Math.abs(pointA.getLongitude())))
-                *Math.cos((Math.toRadians(pointB.getLatitude())+Math.toRadians(pointA.getLatitude()))/2);
+                *Math.cos((Math.toRadians(Math.abs(pointB.getLatitude()))+Math.toRadians(Math.abs(pointA.getLatitude())))/2);
         double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation())/2)
                 *(Math.toRadians(pointB.getLatitude())-Math.toRadians(pointA.getLatitude()));
         double deltaZ = pointB.getElevation() - pointA.getElevation();
