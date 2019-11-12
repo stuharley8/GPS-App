@@ -112,7 +112,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
                 }
 
             } else if (firstAtt.equalsIgnoreCase("lon") && secondAtt.equalsIgnoreCase("lat")) {
-                try {
+                try { // if attributes are flipped
                     latitude = Double.parseDouble(secondAttValue);
                     longitude = Double.parseDouble(firstAttValue);
                 } catch (NumberFormatException npe){
@@ -181,6 +181,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             currentState = PossibleStates.TRKPT;
         }
 
+        //this adds the point to the track list as long as it is set correctly and valid
         if (localName.equalsIgnoreCase("trkpt")){
             if (currentState != PossibleStates.TRKPT){
                 throw new SAXException("</time> element found in illegal location! " + line + ", col " + column);
@@ -268,6 +269,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             }
         }
 
+        // this make sure it is parsing a double from the file
         if (currentState == PossibleStates.ELE){
             try {
                 double elevation = Double.parseDouble(s);
@@ -292,8 +294,9 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
 
         log("end of document found", "parsing complete"); // debug logger
 
-        if (currentState != PossibleStates.FINAL)
+        if (currentState != PossibleStates.FINAL) {
             throw new SAXException("Document structure error. Not in FINAL state at the end of the document!");
+        }
     }
 
     /**
