@@ -283,6 +283,7 @@ public class JUnitTest {
             parser.parse("testfiles\\gpstest-bad latitudes.txt");
             fail();
         } catch (SAXException e) {
+        	// you should also validate the line and column number
             assertEquals("Invalid latitude of -90.1", e.getMessage());
         } catch (Exception e) {
             fail();
@@ -304,6 +305,7 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("Invalid longitude of -180.1", e.getMessage());
+        	// you should also validate the line and column number
         } catch (Exception e) {
             fail();
         }
@@ -324,6 +326,7 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("Unparseable date: \"2014-10-19X13:17:30Z\"", e.getMessage());
+        	// you should also validate the line and column number
         } catch (Exception e) {
             fail();
         }
@@ -364,7 +367,8 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
-        } catch (Exception e) {
+        	// you should also validate the line and column number
+       } catch (Exception e) {
             fail();
         }
     }
@@ -384,6 +388,7 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
+        	// you should also validate the line and column number
         } catch (Exception e) {
             fail();
         }
