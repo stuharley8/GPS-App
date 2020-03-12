@@ -34,6 +34,8 @@ public class Controller {
 
     static Alert ALERT = new Alert(Alert.AlertType.ERROR);
 
+    private static final double M_2_FT = 3.28084;
+
     @FXML
     private ChoiceBox<String> trackChoiceBox;
 
@@ -101,13 +103,15 @@ public class Controller {
     @FXML
     private void updateMetrics(int index) {
         Track tempTrack = gps.getTrack(index);
-        minLatLabel.setText(tempTrack.getMinLatitude() + "");
-        minLongLabel.setText(tempTrack.getMinLongitude() + "");
-        minEleLabel.setText(tempTrack.getMinElevation() + "");
-        maxLatLabel.setText(tempTrack.getMaxLatitude() + "");
-        maxLongLabel.setText(tempTrack.getMaxLongitude() + "");
-        maxEleLabel.setText(tempTrack.getMaxElevation() + "");
-        maxSpeedMphLabel.setText(round(tempTrack.getMaxSpeedMiles(),2) + "");
+        minLatLabel.setText(round(tempTrack.getMinLatitude(), 2) + "");
+        minLongLabel.setText(round(tempTrack.getMinLongitude(), 2) + "");
+        minEleLabel.setText(round(tempTrack.getMinElevation(), 2) + "m / "
+                + round(tempTrack.getMinElevation()*M_2_FT, 2) + "ft");
+        maxLatLabel.setText(round(tempTrack.getMaxLatitude(), 2) + "");
+        maxLongLabel.setText(round(tempTrack.getMaxLongitude(), 2) + "");
+        maxEleLabel.setText(round(tempTrack.getMaxElevation(), 2) + "m / "
+                + round(tempTrack.getMaxElevation()*M_2_FT, 2) + "ft");
+        maxSpeedMphLabel.setText(round(tempTrack.getMaxSpeedMiles(), 2) + "");
         maxSpeedKphLabel.setText(round(tempTrack.getMaxSpeedKM(), 2) + "");
         aveSpeedMphLabel.setText(round(tempTrack.getAveSpeedMiles(), 2) + "");
         aveSpeedKphLabel.setText(round(tempTrack.getAveSpeedKM(), 2) + "");
