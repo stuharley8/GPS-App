@@ -70,12 +70,12 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(2500, gps.getTrack(0).getMaxElevation());
-        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56*DELTA);
-        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798*DELTA);
-        assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260*DELTA);
-        assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133*DELTA);
-        assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56*DELTA);
-        assertEquals(30.798, gps.getTrack(0).getMaxSpeedMiles(), 30.798*DELTA);
+        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56 * DELTA);
+        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798 * DELTA);
+        assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260 * DELTA);
+        assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133 * DELTA);
+        assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56 * DELTA);
+        assertEquals(30.798, gps.getTrack(0).getMaxSpeedMiles(), 30.798 * DELTA);
     }
 
     /**
@@ -103,12 +103,12 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(500, gps.getTrack(0).getMaxElevation());
-        assertEquals(57.696, gps.getTrack(0).getAveSpeedKM(), 57.696*DELTA);
-        assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85*DELTA);
-        assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464*DELTA);
-        assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9*DELTA);
-        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7*DELTA);
-        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5*DELTA);
+        assertEquals(57.696, gps.getTrack(0).getAveSpeedKM(), 57.696 * DELTA);
+        assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85 * DELTA);
+        assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464 * DELTA);
+        assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9 * DELTA);
+        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7 * DELTA);
+        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5 * DELTA);
     }
 
     /**
@@ -137,12 +137,12 @@ public class JUnitTest {
         assertEquals(-88, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(3000, gps.getTrack(0).getMaxElevation());
-        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26*DELTA);
-        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61*DELTA);
-        assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9*DELTA);
-        assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919*DELTA);
-        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67*DELTA);
-        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24*DELTA);
+        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26 * DELTA);
+        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61 * DELTA);
+        assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9 * DELTA);
+        assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919 * DELTA);
+        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67 * DELTA);
+        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24 * DELTA);
     }
 
     /**
@@ -199,12 +199,12 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(2500, gps.getTrack(0).getMaxElevation());
-        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56*DELTA);
-        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798*DELTA);
-        assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260*DELTA);
-        assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133*DELTA);
-        assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56*DELTA);
-        assertEquals(30.798, gps.getTrack(0).getMaxSpeedMiles(), 30.798*DELTA);
+        assertEquals(49.56, gps.getTrack(0).getAveSpeedKM(), 49.56 * DELTA);
+        assertEquals(30.798, gps.getTrack(0).getAveSpeedMiles(), 30.798 * DELTA);
+        assertEquals(8.260, gps.getTrack(0).getDistanceKM(), 8.260 * DELTA);
+        assertEquals(5.133, gps.getTrack(0).getDistanceMiles(), 5.133 * DELTA);
+        assertEquals(49.56, gps.getTrack(0).getMaxSpeedKM(), 49.56 * DELTA);
+        assertEquals(30.798, gps.getTrack(0).getMaxSpeedMiles(), 30.798 * DELTA);
     }
 
     /**
@@ -230,12 +230,12 @@ public class JUnitTest {
         assertEquals(-87.9, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(500, gps.getTrack(0).getMaxElevation());
-        assertEquals(57.696, gps.getTrack(0).getAveSpeedKM(), 57.696*DELTA);
-        assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85*DELTA);
-        assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464*DELTA);
-        assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9*DELTA);
-        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7*DELTA);
-        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5*DELTA);
+        assertEquals(57.696, gps.getTrack(0).getAveSpeedKM(), 57.696 * DELTA);
+        assertEquals(35.85, gps.getTrack(0).getAveSpeedMiles(), 35.85 * DELTA);
+        assertEquals(38.464, gps.getTrack(0).getDistanceKM(), 38.464 * DELTA);
+        assertEquals(23.9, gps.getTrack(0).getDistanceMiles(), 23.9 * DELTA);
+        assertEquals(66.7, gps.getTrack(0).getMaxSpeedKM(), 66.7 * DELTA);
+        assertEquals(41.5, gps.getTrack(0).getMaxSpeedMiles(), 41.5 * DELTA);
     }
 
     /**
@@ -261,12 +261,12 @@ public class JUnitTest {
         assertEquals(-88, gps.getTrack(0).getMaxLongitude());
         assertEquals(500, gps.getTrack(0).getMinElevation());
         assertEquals(3000, gps.getTrack(0).getMaxElevation());
-        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26*DELTA);
-        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61*DELTA);
-        assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9*DELTA);
-        assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919*DELTA);
-        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67*DELTA);
-        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24*DELTA);
+        assertEquals(49.26, gps.getTrack(0).getAveSpeedKM(), 49.26 * DELTA);
+        assertEquals(30.61, gps.getTrack(0).getAveSpeedMiles(), 30.61 * DELTA);
+        assertEquals(73.9, gps.getTrack(0).getDistanceKM(), 73.9 * DELTA);
+        assertEquals(45.919, gps.getTrack(0).getDistanceMiles(), 45.919 * DELTA);
+        assertEquals(48.67, gps.getTrack(0).getMaxSpeedKM(), 48.67 * DELTA);
+        assertEquals(30.24, gps.getTrack(0).getMaxSpeedMiles(), 30.24 * DELTA);
     }
 
     /**
@@ -283,8 +283,9 @@ public class JUnitTest {
             parser.parse("testfiles\\gpstest-bad latitudes.txt");
             fail();
         } catch (SAXException e) {
-        	// you should also validate the line and column number
             assertEquals("Invalid latitude of -90.1", e.getMessage());
+            assertEquals("line 11", "line " + handler.getLine());
+            assertEquals("col 63", "col " + handler.getColumn());
         } catch (Exception e) {
             fail();
         }
@@ -305,7 +306,8 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("Invalid longitude of -180.1", e.getMessage());
-        	// you should also validate the line and column number
+            assertEquals("line 11", "line " + handler.getLine());
+            assertEquals("col 61", "col " + handler.getColumn());
         } catch (Exception e) {
             fail();
         }
@@ -326,7 +328,8 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("Unparseable date: \"2014-10-19X13:17:30Z\"", e.getMessage());
-        	// you should also validate the line and column number
+            assertEquals("line 24", "line " + handler.getLine());
+            assertEquals("col 37", "col " + handler.getColumn());
         } catch (Exception e) {
             fail();
         }
@@ -367,8 +370,9 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
-        	// you should also validate the line and column number
-       } catch (Exception e) {
+            assertEquals("line 19", "line " + handler.getLine());
+            assertEquals("col 40", "col " + handler.getColumn());
+        } catch (Exception e) {
             fail();
         }
     }
@@ -388,7 +392,8 @@ public class JUnitTest {
             fail();
         } catch (SAXException e) {
             assertEquals("<trkpt> element has an illegal number of attributes: 1", e.getMessage());
-        	// you should also validate the line and column number
+            assertEquals("line 15", "line " + handler.getLine());
+            assertEquals("col 38", "col " + handler.getColumn());
         } catch (Exception e) {
             fail();
         }
