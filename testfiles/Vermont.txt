@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
    <trk>
-    <name>Vermont to New Hampshire</name>
+    <name>Connecticut River Valley</name>
     <trkseg>
       <trkpt lat="43.83511" lon="-72.365143">
         <ele>281.6</ele>
