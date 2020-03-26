@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class GPSTrackBuilder extends AbstractParserEventHandler {
     // possible state values
-    private enum PossibleStates { INITIAL, GPX, TRK, NAME, TRKSEG, TRKPT, TIME, ELE, FINAL }
+    private enum PossibleStates {INITIAL, GPX, TRK, NAME, TRKSEG, TRKPT, TIME, ELE, FINAL}
 
     private PossibleStates currentState = PossibleStates.INITIAL; // starting state of parsing
     private List<Point> track; // You need to declare some kind of coordinate collection class here.
@@ -61,7 +61,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
 
         // this is the trk
         if (currentState == PossibleStates.GPX) {
-            if (localName.equalsIgnoreCase("trk")){
+            if (localName.equalsIgnoreCase("trk")) {
                 throw new SAXException("Expected <trk> element at this location! line " + line + ", col " + column);
             }
             currentState = PossibleStates.TRK;
@@ -70,7 +70,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
         }
 
         // this is the name getting the name attribute
-        if (localName.equalsIgnoreCase("name")){
+        if (localName.equalsIgnoreCase("name")) {
             if (currentState != PossibleStates.TRK) {
                 throw new SAXException("<name> element found in illegal location");
             }
@@ -78,7 +78,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
         }
 
         // this is the trkseg getting nothing
-        if (localName.equalsIgnoreCase("trkseg")){
+        if (localName.equalsIgnoreCase("trkseg")) {
             if (currentState != PossibleStates.TRK) {
                 throw new SAXException("Expected <trkseg> element at this location! line " + line + ", col " + column);
             }
@@ -92,7 +92,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             }
             currentState = PossibleStates.TRKPT;
 
-            if (atts.getLength() != 2){
+            if (atts.getLength() != 2) {
                 throw new SAXException("<trkpt> element has an illegal number of attributes: " + atts.getLength());
             }
 
@@ -107,7 +107,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
                 try {
                     latitude = Double.parseDouble(firstAttValue);
                     longitude = Double.parseDouble(secondAttValue);
-                } catch (NumberFormatException npe){
+                } catch (NumberFormatException npe) {
                     throw new SAXException("<trkpt> attributes lat or lon are not doubles!");
                 }
 
@@ -115,7 +115,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
                 try { // if attributes are flipped
                     latitude = Double.parseDouble(secondAttValue);
                     longitude = Double.parseDouble(firstAttValue);
-                } catch (NumberFormatException npe){
+                } catch (NumberFormatException npe) {
                     throw new SAXException("<trkpt> attributes lat or lon are not doubles!");
                 }
 
@@ -136,8 +136,8 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             currentState = PossibleStates.ELE;
         }
 
-        if (localName.equalsIgnoreCase("time")){
-            if (currentState != PossibleStates.TRKPT){
+        if (localName.equalsIgnoreCase("time")) {
+            if (currentState != PossibleStates.TRKPT) {
                 throw new SAXException("Expected <ele> element at this location! line " + line + ", col " + column);
             }
             currentState = PossibleStates.TIME;
@@ -167,32 +167,32 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
         log("endElement found", "<" + localName + "> at line " + line + ", col " + column); // debug logger
 
         // localName contains the name of the element - e.g. gpx, name, trkpt, etc
-        if (localName.equalsIgnoreCase("time")){
-            if (currentState != PossibleStates.TIME){
+        if (localName.equalsIgnoreCase("time")) {
+            if (currentState != PossibleStates.TIME) {
                 throw new SAXException("</time> element found in illegal location! " + line + ", col " + column);
             }
             currentState = PossibleStates.TRKPT;
         }
 
-        if (localName.equalsIgnoreCase("ele")){
-            if (currentState != PossibleStates.ELE){
+        if (localName.equalsIgnoreCase("ele")) {
+            if (currentState != PossibleStates.ELE) {
                 throw new SAXException("</ele> element found in illegal location! " + line + ", col " + column);
             }
             currentState = PossibleStates.TRKPT;
         }
 
         //this adds the point to the track list as long as it is set correctly and valid
-        if (localName.equalsIgnoreCase("trkpt")){
-            if (currentState != PossibleStates.TRKPT){
+        if (localName.equalsIgnoreCase("trkpt")) {
+            if (currentState != PossibleStates.TRKPT) {
                 throw new SAXException("</time> element found in illegal location! " + line + ", col " + column);
             }
-            if (currentPoint.getDate() == null){
+            if (currentPoint.getDate() == null) {
                 throw new SAXException("</trkpt> element is missing a <time> subelement or attribute! line "
-                        + line +", col " + column);
+                        + line + ", col " + column);
             }
-            if (currentPoint.getElevation() == -1){
+            if (currentPoint.getElevation() == -1) {
                 throw new SAXException("</trkpt> element is missing a <ele> subelement or attribute! line "
-                 + line + ", col " + column);
+                        + line + ", col " + column);
             }
             track.add(currentPoint);
             currentState = PossibleStates.TRKSEG;
@@ -201,22 +201,22 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
         // sure that you have fully initialized its lat, lon, time, and elevation attributes.
         // If it's not fully initialized, something was missing, so throw a SAXException in that case.
 
-        if (localName.equalsIgnoreCase("trkseg")){
-            if (currentState != PossibleStates.TRKSEG){
+        if (localName.equalsIgnoreCase("trkseg")) {
+            if (currentState != PossibleStates.TRKSEG) {
                 throw new SAXException("</trkseg> element found in illegal location!");
             }
             currentState = PossibleStates.TRK;
         }
 
-        if (localName.equalsIgnoreCase("name")){
-            if (currentState != PossibleStates.NAME){
+        if (localName.equalsIgnoreCase("name")) {
+            if (currentState != PossibleStates.NAME) {
                 throw new SAXException("</name> element found in illegal location");
             }
             currentState = PossibleStates.TRK;
         }
 
-        if (localName.equalsIgnoreCase("trk")){
-            if (currentState != PossibleStates.TRK){
+        if (localName.equalsIgnoreCase("trk")) {
+            if (currentState != PossibleStates.TRK) {
                 throw new SAXException("</trk> element found in illegal location");
             }
             currentState = PossibleStates.GPX;
@@ -254,11 +254,11 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
             log("characters found", "'" + s + "' at line " + line + ", col " + column);
         }
 
-        if (currentState == PossibleStates.NAME){
+        if (currentState == PossibleStates.NAME) {
             name = s;
         }
 
-        if (currentState == PossibleStates.TIME){
+        if (currentState == PossibleStates.TIME) {
             if (s.isEmpty()) {
                 throw new SAXException("</time> attribute is empty!");
             }
@@ -270,11 +270,11 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
         }
 
         // this make sure it is parsing a double from the file
-        if (currentState == PossibleStates.ELE){
+        if (currentState == PossibleStates.ELE) {
             try {
                 double elevation = Double.parseDouble(s);
                 currentPoint.setElevation(elevation);
-            } catch (NumberFormatException npe){
+            } catch (NumberFormatException npe) {
                 throw new SAXException("</ele> attribute is not a double!");
             }
         }
@@ -301,6 +301,7 @@ public class GPSTrackBuilder extends AbstractParserEventHandler {
 
     /**
      * Constructs the track loaded with the points created by the Track Builder parsing the xml file
+     *
      * @return the loaded track
      */
     public Track loadedTrack() {

@@ -86,7 +86,7 @@ public class Controller {
     public void displayOnAction() {
         String trackName = trackChoiceBox.getValue();
         int index = -1;
-        if(trackName != null) {
+        if (trackName != null) {
             for (int i = 0; i < gps.getNumTracks(); i++) {
                 if (trackName.equals(gps.getTrack(i).getName())) {
                     index = i;
@@ -106,18 +106,18 @@ public class Controller {
         minLatLabel.setText(round(tempTrack.getMinLatitude(), 2) + "");
         minLongLabel.setText(round(tempTrack.getMinLongitude(), 2) + "");
         minEleLabel.setText(round(tempTrack.getMinElevation(), 2) + "m / "
-                + round(tempTrack.getMinElevation()*M_2_FT, 2) + "ft");
+                + round(tempTrack.getMinElevation() * M_2_FT, 2) + "ft");
         maxLatLabel.setText(round(tempTrack.getMaxLatitude(), 2) + "");
         maxLongLabel.setText(round(tempTrack.getMaxLongitude(), 2) + "");
         maxEleLabel.setText(round(tempTrack.getMaxElevation(), 2) + "m / "
-                + round(tempTrack.getMaxElevation()*M_2_FT, 2) + "ft");
+                + round(tempTrack.getMaxElevation() * M_2_FT, 2) + "ft");
         maxSpeedMphLabel.setText(round(tempTrack.getMaxSpeedMiles(), 2) + "");
         maxSpeedKphLabel.setText(round(tempTrack.getMaxSpeedKM(), 2) + "");
         aveSpeedMphLabel.setText(round(tempTrack.getAveSpeedMiles(), 2) + "");
         aveSpeedKphLabel.setText(round(tempTrack.getAveSpeedKM(), 2) + "");
         totalDistanceMilesLabel.setText(round(tempTrack.getDistanceMiles(), 2) + "");
         totalDistanceKmLabel.setText(round(tempTrack.getDistanceKM(), 2) + "");
-        if(tempTrack.getNumPoints() == 1) {
+        if (tempTrack.getNumPoints() == 1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Track Contains 1 Point");
             alert.setHeaderText(tempTrack.getName());
@@ -159,7 +159,7 @@ public class Controller {
                 alert.setHeaderText(gpsTrackBuilder.loadedTrack().getName());
                 alert.setContentText("The track has " + gpsTrackBuilder.loadedTrack().getNumPoints() + " point(s)");
                 alert.showAndWait();
-            } catch (SAXException e){
+            } catch (SAXException e) {
                 ALERT.setTitle("Error Dialog");
                 ALERT.setHeaderText("Parser SAX Exception");
                 ALERT.setContentText(e.getMessage() + "\nThe error occurred near line "
@@ -178,7 +178,7 @@ public class Controller {
 
     @FXML
     private void updateChoiceBox() {
-        for(int i = gps.getNumTracks()-1; i < gps.getNumTracks(); i++) {
+        for (int i = gps.getNumTracks() - 1; i < gps.getNumTracks(); i++) {
             choiceBoxList.add(gps.getTrack(i).getName());
             trackChoiceBox.getItems().add(choiceBoxList.get(i));
         }

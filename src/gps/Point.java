@@ -26,15 +26,16 @@ public class Point {
 
     /**
      * Constructor. Sets base values of elevation and date which will be added later.
-     * @param latitude the latitude
+     *
+     * @param latitude  the latitude
      * @param longitude the longitude
      * @throws IllegalArgumentException if the latitude or longitude is invalid
      */
     public Point(double latitude, double longitude) {
-        if(Math.abs(latitude) > MAX_LATITUDE) {
+        if (Math.abs(latitude) > MAX_LATITUDE) {
             throw new IllegalArgumentException("Invalid latitude of " + latitude);
         }
-        if(Math.abs(longitude) > MAX_LONGITUDE) {
+        if (Math.abs(longitude) > MAX_LONGITUDE) {
             throw new IllegalArgumentException("Invalid longitude of " + longitude);
         }
         this.latitude = latitude;
@@ -46,10 +47,11 @@ public class Point {
 
     /**
      * Constructor used for testing
-     * @param latitude the latitude
+     *
+     * @param latitude  the latitude
      * @param longitude the longitude
      * @param elevation the elevation
-     * @param date the date as a String in UTC format
+     * @param date      the date as a String in UTC format
      */
     public Point(double latitude, double longitude, double elevation, String date) {
         this.latitude = latitude;
@@ -60,6 +62,7 @@ public class Point {
 
     /**
      * Sets the date of the point object
+     *
      * @param time the date represented as a String in UTC format
      * @throws IllegalArgumentException if there is a problem parsing the provided time
      */
@@ -72,7 +75,7 @@ public class Point {
         }
     }
 
-    public void setElevation(double elevation){
+    public void setElevation(double elevation) {
         this.elevation = elevation;
     }
 

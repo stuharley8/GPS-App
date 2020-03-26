@@ -29,12 +29,13 @@ public class GPS {
 
     /**
      * Adds a track to the list of tracks
+     *
      * @param track the track to be
      * @throws IllegalArgumentException if adding a track to tracks would increase
-     * tracks size to greater than MAX_TRACKS
+     *                                  tracks size to greater than MAX_TRACKS
      */
     public void addTrack(Track track) throws IllegalArgumentException {
-        if(tracks.size() == MAX_TRACKS) {
+        if (tracks.size() == MAX_TRACKS) {
             throw new IllegalArgumentException("Max number (" +
                     MAX_TRACKS + ") of tracks already contained");
         }
@@ -43,6 +44,7 @@ public class GPS {
 
     /**
      * Returns the Track from tracks at the specified index
+     *
      * @param index the index
      * @return the Track at the specified index
      */
