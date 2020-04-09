@@ -1,6 +1,4 @@
-//Matt modified this file
 package gps;
-
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
