@@ -143,18 +143,21 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <Label layoutX="46.0" layoutY="47.0" prefHeight="27.0" prefWidth="245.0" text="Select Track to Display Metrics" underline="true">
+                <Label layoutX="46.0" layoutY="50.0" prefHeight="27.0" prefWidth="245.0" text="Select Track to Display Metrics" underline="true">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Label>
-                <ChoiceBox fx:id="trackChoiceBox" layoutX="46.0" layoutY="83.0" prefHeight="25.0" prefWidth="245.0" />
-                <Button layoutX="127.0" layoutY="118.0" mnemonicParsing="false" onAction="#displayOnAction" prefHeight="25.0" prefWidth="84.0" text="Select" />
+                <ChoiceBox fx:id="trackChoiceBox" layoutX="46.0" layoutY="85.0" prefHeight="25.0" prefWidth="245.0" />
+                <Button layoutX="127.0" layoutY="120.0" mnemonicParsing="false" onAction="#displayOnAction" prefHeight="25.0" prefWidth="84.0" text="Select" />
                 <Label fx:id="metricsLabel" layoutX="429.0" layoutY="20.0" prefHeight="27.0" prefWidth="800.0">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Label>
+            <Button disable="true" layoutX="96.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Plot" />
+            <Button disable="true" layoutX="96.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Graph" />
+            <Button disable="true" layoutX="96.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Table" />
             </children>
         </AnchorPane>
     </children>
