@@ -12,11 +12,16 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Paths;
@@ -26,7 +31,7 @@ import java.nio.file.Paths;
  */
 public class Controller {
 
-    private static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
+    protected static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
 
     private GPS gps = new GPS();
 
@@ -188,5 +193,19 @@ public class Controller {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    /**
+     * Opens up the table window
+     * @throws IOException an IOException
+     */
+    @FXML
+    public void openTable() throws IOException {
+        Parent part = FXMLLoader.load(getClass().getResource("Table.fxml"));
+        Stage tableStage = new Stage();
+        Scene tableScene = new Scene(part);
+        tableStage.setScene(tableScene);
+        tableStage.setTitle("Table View");
+        tableStage.show();
     }
 }
