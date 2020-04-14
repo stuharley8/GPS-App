@@ -10,10 +10,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="Data Select">
             <items>
-              <MenuItem mnemonicParsing="false" text="Times at Speeds" />
+              <MenuItem mnemonicParsing="false" onAction="#selectData" text="Times at Various Speeds" />
             </items>
           </Menu>
-          <Menu fx:id="trackSelectMenu" mnemonicParsing="false" text="Track Select" />
+          <Menu fx:id="trackSelectMenu" mnemonicParsing="false" onAction="#selectTrack" text="Track Select" />
         </menus>
       </MenuBar>
       <Label fx:id="titleLabel" alignment="CENTER" prefHeight="17.0" prefWidth="688.0" text="Track : Data" underline="true">
@@ -23,9 +23,9 @@
       </Label>
       <TableView prefHeight="363.0" prefWidth="600.0">
         <columns>
-          <TableColumn fx:id="col1" prefWidth="110.0" text="Speed" />
-          <TableColumn fx:id="col2" prefWidth="126.0" text="Time (Minutes)" />
-            <TableColumn fx:id="col3" prefWidth="124.0" text="\% of Total Time" />
+          <TableColumn fx:id="col1" prefWidth="110.0" />
+          <TableColumn fx:id="col2" prefWidth="126.0" />
+            <TableColumn fx:id="col3" prefWidth="124.0" />
         </columns>
       </TableView>
    </children>

@@ -31,7 +31,7 @@ import java.nio.file.Paths;
  */
 public class Controller {
 
-    protected static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
+    private static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
 
     private GPS gps = new GPS();
 
@@ -201,11 +201,14 @@ public class Controller {
      */
     @FXML
     public void openTable() throws IOException {
-        Parent part = FXMLLoader.load(getClass().getResource("Table.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Table.fxml"));
+        Parent part = loader.load();
+        TableController tableController = (TableController) loader.getController();
         Stage tableStage = new Stage();
         Scene tableScene = new Scene(part);
         tableStage.setScene(tableScene);
         tableStage.setTitle("Table View");
+        tableController.loadTrackChoices(choiceBoxList);
         tableStage.show();
     }
 }
