@@ -33,7 +33,7 @@ public class Controller {
 
     private static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
 
-    private GPS gps = new GPS();
+    private static GPS gps = new GPS();
 
     String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 
@@ -210,5 +210,9 @@ public class Controller {
         tableStage.setTitle("Table View");
         tableController.loadTrackChoices(choiceBoxList);
         tableStage.show();
+    }
+
+    public static GPS getGPS() {
+        return gps;
     }
 }

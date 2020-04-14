@@ -11,10 +11,7 @@ package gps;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 
 import java.util.List;
 
@@ -61,8 +58,14 @@ public class TableController {
         if(!menuItem.getText().equals("Track Select")) {  // Gets the menu as well so this checks for the menuItem
             trackName = menuItem.getText();
             setTitleText();
-            for(Track track : )
+            for (int i = 0; i < Controller.getGPS().getNumTracks(); i++) {
+                if (trackName.equals(Controller.getGPS().getTrack(i).getName())) {
+                    currentTrack = Controller.getGPS().getTrack(i);
+                    break;
+                }
+            }
         }
+        updateTable();
     }
 
     private MenuItem createMenuItem(String text, EventHandler<ActionEvent> handler) {
