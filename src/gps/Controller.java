@@ -11,15 +11,24 @@ package gps;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.xml.sax.SAXException;
+import plotter.PlotterController;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  * Controller Class for the GPS FXML
@@ -188,5 +197,76 @@ public class Controller {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    @FXML
+    public void openPlotter(ActionEvent actionEvent) throws Exception {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../plotter/plotter.fxml"));
+            //Parent root = loader.load();
+            Region contentRootRegion = loader.load();
+
+            PlotterController controller = (PlotterController) loader.getController();
+            Stage plotter = new Stage();
+
+
+
+            //credit to Jason Winnebeck
+            //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
+            double origW = 500;
+            double origH = 500;
+
+            //If the Region containing the GUI does not already have a preferred width and height, set it.
+            //But, if it does, we can use that setting as the "standard" resolution.
+            if ( contentRootRegion.getPrefWidth() == Region.USE_COMPUTED_SIZE )
+                contentRootRegion.setPrefWidth( origW );
+            else
+                origW = contentRootRegion.getPrefWidth();
+
+            if ( contentRootRegion.getPrefHeight() == Region.USE_COMPUTED_SIZE )
+                contentRootRegion.setPrefHeight( origH );
+            else
+                origH = contentRootRegion.getPrefHeight();
+
+            //Wrap the resizable content in a non-resizable container (Group)
+            Group group = new Group( contentRootRegion );
+            //Place the Group in a StackPane, which will keep it centered
+            StackPane rootPane = new StackPane();
+            rootPane.getChildren().add( group );
+
+            plotter.setTitle( "My Slide" );
+            //Create the scene initally at the "100%" size
+            Scene scene = new Scene( rootPane, origW, origH );
+            //Bind the scene's width and height to the scaling parameters on the group
+            group.scaleXProperty().bind( scene.widthProperty().divide( origW ) );
+            //group.scaleYProperty().bind( scene.widthProperty().divide( origH) );
+            group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
+            plotter.setScene(scene);
+
+
+            int i = getSelectionIndex();
+            ArrayList<Track> tracks = new ArrayList<>();
+            tracks.add(gps.getTrack(i));
+            controller.setTrack(tracks);
+
+            //plotter.setScene(new Scene(contentRootRegion));
+            plotter.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getSelectionIndex() {
+        String trackName = trackChoiceBox.getValue();
+        int index = -1;
+        if (trackName != null) {
+            for (int i = 0; i < gps.getNumTracks(); i++) {
+                if (trackName.equals(gps.getTrack(i).getName())) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return index;
     }
 }
