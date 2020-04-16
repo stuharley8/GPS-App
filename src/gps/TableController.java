@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
 
@@ -20,9 +21,9 @@ import java.util.List;
  */
 public class TableController {
 
-    private Track currentTrack;
+    private static Track currentTrack;
     private static String trackName = "Track";
-    private static String data = "Data";
+    private static String data = "Times at Various Speeds";
 
     @FXML
     private Menu trackSelectMenu;
@@ -31,13 +32,16 @@ public class TableController {
     private Label titleLabel;
 
     @FXML
-    private TableColumn col1;
+    private TableView<TableRow> table;
 
     @FXML
-    private TableColumn col2;
+    private TableColumn<TableRow, String> column1;
 
     @FXML
-    private TableColumn col3;
+    private TableColumn<TableRow, String> column2;
+
+    @FXML
+    private TableColumn<TableRow, String> column3;
 
     /**
      * Adds the loaded tracks to the select track menu dropdown
@@ -52,6 +56,10 @@ public class TableController {
         }
     }
 
+    /**
+     * Handles the user selecting a track to display data of
+     * @param actionEvent the selection of a track
+     */
     @FXML
     public void selectTrack(ActionEvent actionEvent) {
         MenuItem menuItem = (MenuItem) actionEvent.getSource();
@@ -64,8 +72,8 @@ public class TableController {
                     break;
                 }
             }
+            updateTable();
         }
-        updateTable();
     }
 
     private MenuItem createMenuItem(String text, EventHandler<ActionEvent> handler) {
@@ -89,11 +97,36 @@ public class TableController {
 
     @FXML
     private void updateTable() {
+        table.getItems().clear();
+        column1.setCellValueFactory(new PropertyValueFactory<>("col1"));
+        column2.setCellValueFactory(new PropertyValueFactory<>("col2"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("col3"));
         switch(data) {
             case "Times at Various Speeds":
-                col1.setText("Speed");
-                col2.setText("Time (min)");
-                col3.setText("% Total Time");
+                column1.setText("Speed");
+                column2.setText("Time (min)");
+                column3.setText("% Total Time");
+                if(currentTrack != null && currentTrack.getNumPoints() >= 2) {
+                    TableSpeedsHandler tbh = new TableSpeedsHandler(currentTrack);
+                    table.getItems().add(new TableRow("<3mph", "" + tbh.getThreeLessMin(),
+                            "" + tbh.getPercentThreeLess()));
+                    table.getItems().add(new TableRow("3-7mph", "" + tbh.getSevenLessMin(),
+                            "" + tbh.getPercentSevenLess()));
+                    table.getItems().add(new TableRow("7-10mph", "" + tbh.getTenLessMin(),
+                            "" + tbh.getPercentTenLess()));
+                    table.getItems().add(new TableRow("10-15mph", "" + tbh.getFifteenLessMin(),
+                            "" + tbh.getPercentFifteenLess()));
+                    table.getItems().add(new TableRow("15-20mph", "" + tbh.getTwentyLessMin(),
+                            "" + tbh.getPercentTwentyLess()));
+                    table.getItems().add(new TableRow(">20mph", "" + tbh.getTwentyGreaterMin(),
+                            "" + tbh.getPercentTwentyGreater()));
+                } else if(currentTrack != null && currentTrack.getNumPoints() < 2) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Track Contains 1 Point");
+                    alert.setHeaderText(currentTrack.getName());
+                    alert.setContentText("Speed metrics cannot be calculated for a track with only 1 point");
+                    alert.showAndWait();
+                }
         }
     }
 }
