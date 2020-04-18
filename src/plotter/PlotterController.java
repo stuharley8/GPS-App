@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
@@ -24,9 +25,37 @@ public class PlotterController {
     List<Track> tracks;
 
     private static final double MAP_DIMENSIONS = 500;
+    private static final double MAP_CENTER = MAP_DIMENSIONS / 2.0;
+    private static final double MAP_SCALE = MAP_DIMENSIONS / 2.0;
+    private static double MAX_DISTANCE;
+    private static double MAX_X;
+    private static double MAX_Y;
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+
+        for (Track track : tracks) {
+            Point minPoint = new Point(track.getMinLatitude(), track.getMinLongitude());
+            Point maxPoint = new Point(track.getMaxLatitude(), track.getMaxLongitude());
+            double [] array = coordConverstion(minPoint, maxPoint, 0,0);
+            if (array[0] > MAX_X) {
+                MAX_X = array[0];
+            }
+            if (array[1] > MAX_Y) {
+                MAX_Y = array[1];
+            }
+        }
+
+        CanvasLayer canvasLayer = new CanvasLayer("axis", MAP_DIMENSIONS);
+        GraphicsContext gc = canvasLayer.getGraphicsContext2D();
+        gc.setLineWidth(2);
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
+        gc.strokeLine(MAP_CENTER, 0, MAP_CENTER, MAP_DIMENSIONS);
+        gc.strokeLine(0, MAP_CENTER, MAP_DIMENSIONS, MAP_CENTER);
+
+        mapArea.getChildren().add(canvasLayer);
+
 
         for(Track track : tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
@@ -40,11 +69,31 @@ public class PlotterController {
 
             drawPoints(track);
         }
+
+    }
+
+    private Track [] getLargestTrack(List<Track> tracks) {
+        Track tallestTrack = tracks.get(0);
+        Track widestTrack = tracks.get(0);
+        for (int i = 1 ; i < tracks.size(); ++i ) {
+            Track track = tracks.get(i);
+            double width = Math.abs(track.getMaxLongitude() - track.getMinLongitude());
+            double height = Math.abs(track.getMaxLatitude() - track.getMinLatitude());
+            double maxWidth = Math.abs(widestTrack.getMaxLongitude() - widestTrack.getMinLongitude());
+            double maxHeight = Math.abs(tallestTrack.getMaxLatitude() - tallestTrack.getMinLatitude());
+            if (height > maxHeight) {
+                tallestTrack = track;
+            }
+            if (width > maxWidth) {
+                widestTrack = track;
+            }
+        }
+        return new Track[]{widestTrack, tallestTrack};
     }
 
     public void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
-        System.out.println(i.getText() + " was clicked. It is now " + i.isSelected());
+//        System.out.println(i.getText() + " was clicked. It is now " + i.isSelected());
         if (i.isSelected()) {
             drawPoints(getTrackInTracks(i.getText()));
         } else {
@@ -81,34 +130,61 @@ public class PlotterController {
         gc.setFill(color);
 
         List<Point> points = track.getPoints();
-        List<double[]> latLongCoordinates = new ArrayList<>();
-        for (Point point : points) {
-            double[] latLong = new double[2];
-            latLong[0] = point.getLatitude();
-            latLong[1] = point.getLongitude();
-            latLongCoordinates.add(latLong);
+
+        List<double [] > converted = new ArrayList<> ();
+        double prevX = 0.0;
+        double prevY = 0.0;
+        for ( int i = 1 ; i < points.size(); ++i ){
+            double array [] = coordConverstion(points.get(i - 1), points.get(i), prevX, prevY);
+            converted.add(array);
+            prevX = array[0];
+            prevY = array[1];
         }
 
-        double[] maxMin = getLatLongMaxMin(latLongCoordinates);
-        double latitudeMin = maxMin[0];
-        double latitudeMax = maxMin[1];
-        double longitudeMin = maxMin[2];
-        double longitudeMax = maxMin[3];
+        double[] maxMin = getLatLongMaxMin(converted);
+        double longitudeMin = maxMin[0];
+        double longitudeMax = maxMin[1];
+        double latitudeMin = maxMin[2];
+        double latitudeMax = maxMin[3];
 
         double latRatio = (Math.abs(latitudeMax - latitudeMin) / Math.abs(longitudeMax - longitudeMin));
         double longRatio = (Math.abs(longitudeMax - longitudeMin) / Math.abs(latitudeMax - latitudeMin));
 
-        double offset = (latRatio < 1) ? 1 - latRatio : 1 - longRatio;
+        //double offset = (latRatio < 1) ? 1 - latRatio : 1 - longRatio;
+        double zeroX = applyXTransformation(converted.get(0)[0], longitudeMin, longitudeMax, longRatio);
+        double zeroY = applyYTransformation(converted.get(0)[1], latitudeMin, latitudeMax, latRatio);
 
-
-        for (Point point : points) {
-            double longX = applyXTransformation(point.getLongitude(), longitudeMin, longitudeMax, longRatio);
-            double latY = applyYTransformation(point.getLatitude(), latitudeMin, latitudeMax, latRatio);
-            gc.fillOval(longX, latY, 1, 1);
+        for (double [] point : converted) {
+            double longX = applyXTransformation(point[0], longitudeMin, longitudeMax, longRatio);
+            double latY = applyYTransformation(point[1], latitudeMin, latitudeMax, latRatio);
+            gc.fillOval(MAP_CENTER + longX, MAP_CENTER + latY - zeroY, 1, 1);
         }
 
         mapArea.getChildren().add(canvas);
     }
+
+
+    /**
+     * Converts from polar coordinates to cartesian
+     * @param previous
+     * @param current
+     * @param prevX
+     * @param prevY
+     * @return
+     */
+    private double[] coordConverstion(Point previous, Point current, double prevX, double prevY) {
+
+        double prevLong = Math.toRadians(previous.getLongitude());
+        double prevLat = Math.toRadians(previous.getLatitude());
+        double currentLong = Math.toRadians(current.getLongitude());
+        double currentLat = Math.toRadians(current.getLatitude());
+
+        double r = (6378137 + (current.getElevation() + previous.getElevation()) / 2);
+        double deltaX = r * (currentLong - prevLong) * Math.cos((currentLong + prevLat)/2);
+        double deltaY = r * (currentLat - prevLat);
+        return new double[]{prevX + deltaX, prevY + deltaY};
+    }
+
 
 
     /**
@@ -123,9 +199,10 @@ public class PlotterController {
     private double applyYTransformation(double latitude, double latitudeMin, double latitudeMax, double ratio) {
         double scalarMax = latitudeMax - latitudeMin;
         double y = latitude - latitudeMin;
-        y /= scalarMax;
+        //y /= scalarMax;
+        y /= MAX_Y;
         y = 1 - y;
-        y *= MAP_DIMENSIONS;
+        y *= MAP_SCALE;
         if (ratio < 1) {
             y *= ratio;
         }
@@ -146,8 +223,9 @@ public class PlotterController {
         double abs = Math.abs(longitudeMin);
         double scalarMax = longitudeMax + abs;
         double x = longitude + abs;
-        x /= scalarMax;
-        x *= MAP_DIMENSIONS;
+        //x /= scalarMax;
+        x /= MAX_X;
+        x *= MAP_SCALE;
         if (ratio < 1) {
             x *= ratio;
         }
