@@ -30,11 +30,20 @@ public class PlotterController {
     private static double MAX_DISTANCE;
     private static double MAX_X;
     private static double MAX_Y;
+    private PlotterTable table;
 
     public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
-
+        //ignores track if less than 2 points
+        this.tracks = new ArrayList<>();
         for (Track track : tracks) {
+            if (track.getPoints().size() > 1) {
+                this.tracks.add(track);
+            }
+        }
+
+        table = new PlotterTable(this.tracks);
+
+        for (Track track : this.tracks) {
             Point minPoint = new Point(track.getMinLatitude(), track.getMinLongitude());
             Point maxPoint = new Point(track.getMaxLatitude(), track.getMaxLongitude());
             double [] array = coordConverstion(minPoint, maxPoint, 0,0);
@@ -56,8 +65,7 @@ public class PlotterController {
 
         mapArea.getChildren().add(canvasLayer);
 
-
-        for(Track track : tracks) {
+        for(Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
             item.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
@@ -70,25 +78,8 @@ public class PlotterController {
             drawPoints(track);
         }
 
-    }
+        mapArea.getChildren().add(table);
 
-    private Track [] getLargestTrack(List<Track> tracks) {
-        Track tallestTrack = tracks.get(0);
-        Track widestTrack = tracks.get(0);
-        for (int i = 1 ; i < tracks.size(); ++i ) {
-            Track track = tracks.get(i);
-            double width = Math.abs(track.getMaxLongitude() - track.getMinLongitude());
-            double height = Math.abs(track.getMaxLatitude() - track.getMinLatitude());
-            double maxWidth = Math.abs(widestTrack.getMaxLongitude() - widestTrack.getMinLongitude());
-            double maxHeight = Math.abs(tallestTrack.getMaxLatitude() - tallestTrack.getMinLatitude());
-            if (height > maxHeight) {
-                tallestTrack = track;
-            }
-            if (width > maxWidth) {
-                widestTrack = track;
-            }
-        }
-        return new Track[]{widestTrack, tallestTrack};
     }
 
     public void addRemoveTrack(ActionEvent e) {
@@ -96,10 +87,18 @@ public class PlotterController {
 //        System.out.println(i.getText() + " was clicked. It is now " + i.isSelected());
         if (i.isSelected()) {
             drawPoints(getTrackInTracks(i.getText()));
+
         } else {
             removeTrackFromScene(i.getText());
+
         }
+        redrawTable(i.getText(), i.isSelected());
     }
+
+    private void redrawTable(String name, boolean isSelected) {
+        table.redraw(name, isSelected);
+    }
+
 
     private void removeTrackFromScene(String name) {
         ObservableList<Node> nodes = mapArea.getChildren();
@@ -127,6 +126,7 @@ public class PlotterController {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         Color color = new Color(Math.random(), Math.random(), Math.random(), 1.0);
+        table.setTrackColor(track.getName(), color);
         gc.setFill(color);
 
         List<Point> points = track.getPoints();
@@ -157,6 +157,7 @@ public class PlotterController {
         for (double [] point : converted) {
             double longX = applyXTransformation(point[0], longitudeMin, longitudeMax, longRatio);
             double latY = applyYTransformation(point[1], latitudeMin, latitudeMax, latRatio);
+
             gc.fillOval(MAP_CENTER + longX, MAP_CENTER + latY - zeroY, 1, 1);
         }
 

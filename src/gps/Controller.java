@@ -14,9 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
@@ -201,14 +203,26 @@ public class Controller {
     public void openPlotter(ActionEvent actionEvent) throws Exception {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../plotter/plotter.fxml"));
-            //Parent root = loader.load();
             Region contentRootRegion = loader.load();
 
             PlotterController controller = (PlotterController) loader.getController();
             Stage plotter = new Stage();
 
+            plotter.heightProperty().addListener((o, oldValue, newValue) -> {
+                plotter.setHeight(plotter.getWidth()+50);
+            });
+            plotter.widthProperty().addListener((o, oldValue, newValue) -> {
+                if (plotter.getWidth() < 500) {
+                    //plotter.setHeight(plotter.getWidth()+50);
+                    plotter.setWidth(500);
+                }
+                /*if(plotter.getWidth() > 1000) {
+                    plotter.setWidth(1000);
+                }*/
+                plotter.setHeight(plotter.getWidth()+50);
+            });
 
-/*
+
             //credit to Jason Winnebeck
             //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
             double origW = 500;
@@ -230,17 +244,18 @@ public class Controller {
             Group group = new Group( contentRootRegion );
             //Place the Group in a StackPane, which will keep it centered
             StackPane rootPane = new StackPane();
+
             rootPane.getChildren().add( group );
 
-            plotter.setTitle( "My Slide" );
+            plotter.setTitle( "Track Plotter" );
             //Create the scene initally at the "100%" size
             Scene scene = new Scene( rootPane, origW, origH );
             //Bind the scene's width and height to the scaling parameters on the group
             group.scaleXProperty().bind( scene.widthProperty().divide( origW ) );
-            //group.scaleYProperty().bind( scene.widthProperty().divide( origH) );
-            group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
+            group.scaleYProperty().bind( group.scaleXProperty() );
+            //group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
             plotter.setScene(scene);
-*/
+
 
             ArrayList<Track> tracks = new ArrayList<>();
             for (int i = 0; i < gps.getNumTracks(); i++) {
@@ -250,24 +265,11 @@ public class Controller {
             controller.setTracks(tracks);
 
 
-            plotter.setScene(new Scene(contentRootRegion));
+            //plotter.setScene(new Scene(contentRootRegion));
             plotter.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private int getSelectionIndex() {
-        String trackName = trackChoiceBox.getValue();
-        int index = -1;
-        if (trackName != null) {
-            for (int i = 0; i < gps.getNumTracks(); i++) {
-                if (trackName.equals(gps.getTrack(i).getName())) {
-                    index = i;
-                    break;
-                }
-            }
-        }
-        return index;
-    }
 }
