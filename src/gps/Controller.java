@@ -14,11 +14,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
@@ -210,7 +208,7 @@ public class Controller {
             Stage plotter = new Stage();
 
 
-
+/*
             //credit to Jason Winnebeck
             //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
             double origW = 500;
@@ -242,14 +240,17 @@ public class Controller {
             //group.scaleYProperty().bind( scene.widthProperty().divide( origH) );
             group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
             plotter.setScene(scene);
+*/
 
-
-            int i = getSelectionIndex();
             ArrayList<Track> tracks = new ArrayList<>();
-            tracks.add(gps.getTrack(i));
-            controller.setTrack(tracks);
+            for (int i = 0; i < gps.getNumTracks(); i++) {
+                tracks.add(gps.getTrack(i));
+            }
 
-            //plotter.setScene(new Scene(contentRootRegion));
+            controller.setTracks(tracks);
+
+
+            plotter.setScene(new Scene(contentRootRegion));
             plotter.show();
         } catch (Exception e) {
             e.printStackTrace();

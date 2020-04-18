@@ -2,10 +2,15 @@ package plotter;
 
 import gps.Track;
 import gps.Point;
-import javafx.scene.canvas.Canvas;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -13,32 +18,69 @@ import java.util.List;
 
 public class PlotterController {
 
-    public Label label;
     public AnchorPane container;
+    public Menu tracksMenu;
+    public Pane mapArea;
     List<Track> tracks;
 
     private static final double MAP_DIMENSIONS = 500;
 
-    private Canvas canvas;
-    private GraphicsContext gc;// = this.getGraphicsContext2D();
-
-    public void setTrack(List<Track> tracks) {
+    public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
-        label.setText(tracks.get(0).getName());
-        drawPoints();
+
+        for(Track track : tracks) {
+            CheckMenuItem item = new CheckMenuItem(track.getName());
+            item.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    addRemoveTrack(e);
+                }
+            });
+            item.setSelected(true);
+            tracksMenu.getItems().add(item);
+
+            drawPoints(track);
+        }
     }
 
-    private void drawPoints() {
-        //canvas = new Canvas(MAP_DIMENSIONS + 20, MAP_DIMENSIONS);
-        canvas = new Canvas(MAP_DIMENSIONS, MAP_DIMENSIONS);
-        gc = canvas.getGraphicsContext2D();
-        //container.getChildren().add(canvas);
-        this.container.getChildren().add(canvas);
+    public void addRemoveTrack(ActionEvent e) {
+        CheckMenuItem i = (CheckMenuItem) e.getSource();
+        System.out.println(i.getText() + " was clicked. It is now " + i.isSelected());
+        if (i.isSelected()) {
+            drawPoints(getTrackInTracks(i.getText()));
+        } else {
+            removeTrackFromScene(i.getText());
+        }
+    }
 
-        gc.setFill(Color.BLACK);
-        //gc.strokeLine(0,0,50,50);
+    private void removeTrackFromScene(String name) {
+        ObservableList<Node> nodes = mapArea.getChildren();
 
-        List<Point> points = tracks.get(0).getPoints();
+        for (Node node : nodes) {
+            CanvasLayer layer = (CanvasLayer) node;
+            if (layer.getName().equals(name)) {
+                nodes.remove(node);
+                break;
+            }
+        }
+    }
+
+    private Track getTrackInTracks (String name) {
+        for (Track track : tracks) {
+            if (track.getName().equals(name)) {
+                return track;
+            }
+        }
+        return null;
+    }
+
+    private void drawPoints(Track track) {
+        CanvasLayer canvas = new CanvasLayer(track.getName(), MAP_DIMENSIONS);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        Color color = new Color(Math.random(), Math.random(), Math.random(), 1.0);
+        gc.setFill(color);
+
+        List<Point> points = track.getPoints();
         List<double[]> latLongCoordinates = new ArrayList<>();
         for (Point point : points) {
             double[] latLong = new double[2];
@@ -62,16 +104,10 @@ public class PlotterController {
         for (Point point : points) {
             double longX = applyXTransformation(point.getLongitude(), longitudeMin, longitudeMax, longRatio);
             double latY = applyYTransformation(point.getLatitude(), latitudeMin, latitudeMax, latRatio);
-            gc.setFill(Color.BLACK);
-//            if (point.getElevation() > 500) {
-//                gc.setFill(Color.RED);
-//            }
             gc.fillOval(longX, latY, 1, 1);
         }
-        //gc.fillOval();
 
-
-
+        mapArea.getChildren().add(canvas);
     }
 
 
