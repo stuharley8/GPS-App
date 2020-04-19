@@ -87,6 +87,10 @@ public class TableController {
         titleLabel.setText(trackName + " : " + data);
     }
 
+    /**
+     * Method deals with the User selecting the type of data to be displayed
+     * @param actionEvent the actionEvent
+     */
     @FXML
     public void selectData(ActionEvent actionEvent) {
         MenuItem menuItem = (MenuItem) actionEvent.getSource();

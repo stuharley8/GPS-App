@@ -28,5 +28,6 @@
                 <TableColumn fx:id="column3" prefWidth="124.0" text="\% Total Time" />
             </columns>
         </TableView>
+      <Pane prefHeight="200.0" prefWidth="200.0" />
     </children>
 </VBox>

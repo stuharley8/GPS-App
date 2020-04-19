@@ -33,9 +33,6 @@ public class TableSpeedsHandler {
         calcTimesAtSpeeds();
     }
 
-    /**
-     * Calculates the times for all the various speed categories
-     */
     private void calcTimesAtSpeeds() {
         for(int i = 0; i < track.getNumPoints()-1; i++) {
             long totalTime = Math.abs(track.getPoint(i+1).getDate().getTime()
