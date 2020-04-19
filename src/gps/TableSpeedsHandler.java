@@ -8,6 +8,9 @@
 
 package gps;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Class handles calculating the metrics displayed to the table
  */
@@ -60,50 +63,56 @@ public class TableSpeedsHandler {
     }
 
     public double getThreeLessMin() {
-        return Controller.round(threeLessMin, 2);
+        return round(threeLessMin, 2);
     }
 
     public double getSevenLessMin() {
-        return Controller.round(sevenLessMin, 2);
+        return round(sevenLessMin, 2);
     }
 
     public double getTenLessMin() {
-        return Controller.round(tenLessMin, 2);
+        return round(tenLessMin, 2);
     }
 
     public double getFifteenLessMin() {
-        return Controller.round(fifteenLessMin, 2);
+        return round(fifteenLessMin, 2);
     }
 
     public double getTwentyLessMin() {
-        return Controller.round(twentyLessMin, 2);
+        return round(twentyLessMin, 2);
     }
 
     public double getTwentyGreaterMin() {
-        return Controller.round(twentyGreaterMin, 2);
+        return round(twentyGreaterMin, 2);
     }
 
     public double getPercentThreeLess() {
-        return Controller.round(threeLessMin/totalMin*100, 2);
+        return round(threeLessMin/totalMin*100, 2);
     }
 
     public double getPercentSevenLess() {
-        return Controller.round(sevenLessMin/totalMin*100, 2);
+        return round(sevenLessMin/totalMin*100, 2);
     }
 
     public double getPercentTenLess() {
-        return Controller.round(tenLessMin/totalMin*100, 2);
+        return round(tenLessMin/totalMin*100, 2);
     }
 
     public double getPercentFifteenLess() {
-        return Controller.round(fifteenLessMin/totalMin*100, 2);
+        return round(fifteenLessMin/totalMin*100, 2);
     }
 
     public double getPercentTwentyLess() {
-        return Controller.round(twentyLessMin/totalMin*100, 2);
+        return round(twentyLessMin/totalMin*100, 2);
     }
 
     public double getPercentTwentyGreater() {
-        return Controller.round(twentyGreaterMin/totalMin*100, 2);
+        return round(twentyGreaterMin/totalMin*100, 2);
+    }
+
+    private double round(double value, int places) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
