@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxdata="http://www.cluetrust.com/XML/GPXDATA/1/0" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.cluetrust.com/XML/GPXDATA/1/0 http://www.cluetrust.com/Schemas/gpxdata10.xsd" version="1.1" creator="http://ridewithgps.com/">
-  <metadata>
-    <name>WhiteMountains</name>
-    <link href="https://ridewithgps.com/trips/17309902">
-      <text>08/30/17</text>
-    </link>
-    <time>2017-08-30T06:41:58Z</time>
-  </metadata>
+<gpx>
   <trk>
     <name>S Strafford VT to Lincoln NH</name>
     <trkseg>
