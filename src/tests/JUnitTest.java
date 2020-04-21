@@ -451,7 +451,7 @@ public class JUnitTest {
         Parser parser;
         try {
             parser = new Parser(handler);
-            parser.parse("testfiles\\GPSTestTimesAtVariousSpeeds.txt");
+            parser.parse("testfiles\\MHA5-15.txt");
             tsh = new TableSpeedsHandler(gpsTrackBuilder.loadedTrack());
         } catch (Exception e) {
             fail();
