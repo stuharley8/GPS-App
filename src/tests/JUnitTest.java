@@ -438,4 +438,35 @@ public class JUnitTest {
             fail();
         }
     }
+
+    /**
+     * Tests the table to see if it is displaying the correct info
+     */
+    @Test
+    public void testTimesAtVariousSpeedsTable() {
+        TableSpeedsHandler tsh = null;
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\MHA5-15.txt");
+            tsh = new TableSpeedsHandler(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(tsh.getThreeLessMin(), 60);
+        assertEquals(tsh.getSevenLessMin(), 60);
+        assertEquals(tsh.getTenLessMin(), 60);
+        assertEquals(tsh.getFifteenLessMin(), 60);
+        assertEquals(tsh.getTwentyLessMin(), 60);
+        assertEquals(tsh.getTwentyGreaterMin(), 60);
+        assertEquals(tsh.getPercentThreeLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentSevenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentTenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentFifteenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentTwentyLess(), 16.67 ,DELTA);
+        assertEquals(tsh.getPercentTwentyGreater(), 16.67, DELTA);
+    }
 }

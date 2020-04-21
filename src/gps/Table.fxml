@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.TableController">
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="Data Select">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#selectData" text="Times at Various Speeds" />
+                    </items>
+                </Menu>
+                <Menu fx:id="trackSelectMenu" mnemonicParsing="false" onAction="#selectTrack" text="Track Select" />
+            </menus>
+        </MenuBar>
+        <Label fx:id="titleLabel" alignment="CENTER" prefHeight="17.0" prefWidth="688.0" text="Track : Times at Various Speeds" underline="true">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <TableView fx:id="table" prefHeight="363.0" prefWidth="600.0">
+            <columns>
+                <TableColumn fx:id="column1" prefWidth="110.0" text="Speed" />
+                <TableColumn fx:id="column2" prefWidth="126.0" text="Time (min)" />
+                <TableColumn fx:id="column3" prefWidth="124.0" text="\% Total Time" />
+            </columns>
+        </TableView>
+      <Pane prefHeight="200.0" prefWidth="200.0" />
+    </children>
+</VBox>

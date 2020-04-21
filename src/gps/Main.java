@@ -31,7 +31,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("GPS.fxml"));
         primaryStage.setTitle("GPS");
-        primaryStage.setScene(new Scene(root, 800, 400));
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }
 
