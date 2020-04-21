@@ -8,10 +8,9 @@
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="459.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.GraphController">
    <children>
-      <LineChart layoutX="14.0" layoutY="30.0" legendVisible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="720.0" fx:id="chart">
+      <LineChart fx:id="chart" layoutX="14.0" layoutY="30.0" legendVisible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="720.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -21,6 +20,7 @@
       </LineChart>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="742.0">
         <menus>
+            <Menu fx:id="tracks" mnemonicParsing="false" text="Tracks" />
           <Menu mnemonicParsing="false" text="Data">
             <items>
                   <RadioMenuItem mnemonicParsing="false" text="Distance vs Time" />
