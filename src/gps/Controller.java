@@ -209,7 +209,7 @@ public class Controller {
             Stage plotter = new Stage();
 
             plotter.heightProperty().addListener((o, oldValue, newValue) -> {
-                plotter.setHeight(plotter.getWidth()+50);
+                plotter.setHeight(plotter.getWidth() + 50);
             });
             plotter.widthProperty().addListener((o, oldValue, newValue) -> {
                 if (plotter.getWidth() < 500) {
@@ -219,7 +219,7 @@ public class Controller {
                 /*if(plotter.getWidth() > 1000) {
                     plotter.setWidth(1000);
                 }*/
-                plotter.setHeight(plotter.getWidth()+50);
+                plotter.setHeight(plotter.getWidth()  + 50);
             });
 
 
@@ -230,41 +230,52 @@ public class Controller {
 
             //If the Region containing the GUI does not already have a preferred width and height, set it.
             //But, if it does, we can use that setting as the "standard" resolution.
-            if ( contentRootRegion.getPrefWidth() == Region.USE_COMPUTED_SIZE )
-                contentRootRegion.setPrefWidth( origW );
+            if (contentRootRegion.getPrefWidth() == Region.USE_COMPUTED_SIZE)
+                contentRootRegion.setPrefWidth(origW);
             else
                 origW = contentRootRegion.getPrefWidth();
 
-            if ( contentRootRegion.getPrefHeight() == Region.USE_COMPUTED_SIZE )
-                contentRootRegion.setPrefHeight( origH );
+            if (contentRootRegion.getPrefHeight() == Region.USE_COMPUTED_SIZE)
+                contentRootRegion.setPrefHeight(origH);
             else
                 origH = contentRootRegion.getPrefHeight();
 
             //Wrap the resizable content in a non-resizable container (Group)
-            Group group = new Group( contentRootRegion );
+            Group group = new Group(contentRootRegion);
             //Place the Group in a StackPane, which will keep it centered
             StackPane rootPane = new StackPane();
 
-            rootPane.getChildren().add( group );
+            rootPane.getChildren().add(group);
 
-            plotter.setTitle( "Track Plotter" );
+            plotter.setTitle("Track Plotter");
             //Create the scene initally at the "100%" size
-            Scene scene = new Scene( rootPane, origW, origH );
+            Scene scene = new Scene(rootPane, origW, origH);
             //Bind the scene's width and height to the scaling parameters on the group
-            group.scaleXProperty().bind( scene.widthProperty().divide( origW ) );
-            group.scaleYProperty().bind( group.scaleXProperty() );
+            group.scaleXProperty().bind(scene.widthProperty().divide(origW));
+            group.scaleYProperty().bind(group.scaleXProperty());
             //group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
             plotter.setScene(scene);
 
 
             ArrayList<Track> tracks = new ArrayList<>();
             for (int i = 0; i < gps.getNumTracks(); i++) {
-                tracks.add(gps.getTrack(i));
+                Track t = gps.getTrack(i);
+                boolean trackAlreadyLoaded = false;
+                for (Track track : tracks) {
+                    if (track.getName().equals(t.getName())) {
+                        trackAlreadyLoaded = true;
+                        break;
+                    }
+                }
+
+                if (!trackAlreadyLoaded) {
+                    tracks.add(gps.getTrack(i));
+                }
             }
 
             controller.setTracks(tracks);
 
-
+            controller.setStage(plotter);
             //plotter.setScene(new Scene(contentRootRegion));
             plotter.show();
         } catch (Exception e) {

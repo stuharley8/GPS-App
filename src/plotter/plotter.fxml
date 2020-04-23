@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane fx:id="container" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plotter.PlotterController">
+<AnchorPane fx:id="container" prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plotter.PlotterController">
    <children>
-      <MenuBar prefWidth="500.0">
+      <MenuBar prefWidth="1000.0">
         <menus>
           <Menu fx:id="tracksMenu" mnemonicParsing="false" text="Select Tracks">
                <items>

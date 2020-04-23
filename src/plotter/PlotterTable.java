@@ -31,7 +31,7 @@ public class PlotterTable extends CanvasLayer {
                 gc.setFill(track.getColor());
                 gc.fillRoundRect(x, y - 4, x + 35, 8, 10,10);
                 gc.strokeText(track.getName(), x + 50, y + 5);
-                gc.strokeText("Distance: " + df.format(track.getDistanceInMiles()) + " miles : " + df.format(track.getDistanceInKM()) + " km", x, y + 20);
+                gc.strokeText("                " + df.format(track.getDistanceInMiles()) + " miles : " + df.format(track.getDistanceInKM()) + " km", x, y + 20);
                 y += 35;
             }
 

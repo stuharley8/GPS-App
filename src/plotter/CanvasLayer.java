@@ -5,7 +5,7 @@ import javafx.scene.canvas.Canvas;
 public class CanvasLayer extends Canvas {
     private String name;
     public CanvasLayer (String name, double MAP_DIMENSIONS) {
-        super(MAP_DIMENSIONS, MAP_DIMENSIONS);
+        super(MAP_DIMENSIONS * 2, MAP_DIMENSIONS);
         this.name = name;
     }
 

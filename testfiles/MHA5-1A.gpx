@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+   <trk>
+    <name>testFile</name>
+    <trkseg>
+      <trkpt lat="44.0" lon="-71.0">
+        <ele>275.6</ele>
+        <time>2017-09-01T12:06:22Z</time>
+      </trkpt>
+      <trkpt lat="44.5" lon="-71.0">
+        <ele>276.6</ele>
+        <time>2017-09-01T12:06:23Z</time>
+      </trkpt>
+      <trkpt lat="45.0" lon="-71.0">
+        <ele>275.0</ele>
+        <time>2017-09-01T12:06:33Z</time>
+      </trkpt>
+      <trkpt lat="45.0" lon="-70.5">
+        <ele>275.0</ele>
+        <time>2017-09-01T12:06:35Z</time>
+      </trkpt>
+      <trkpt lat="44.5" lon="-70.5">
+        <ele>274.6</ele>
+        <time>2017-09-01T12:06:40Z</time>
+      </trkpt>
+      <trkpt lat="44.0" lon="-70.5">
+        <ele>274.4</ele>
+        <time>2017-09-01T12:06:44Z</time>
+      </trkpt>
+      <trkpt lat="44.0" lon="-71.0">
+        <ele>274.4</ele>
+        <time>2017-09-01T12:06:52Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
