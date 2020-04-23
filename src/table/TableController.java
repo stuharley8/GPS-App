@@ -6,8 +6,10 @@
  * Created: 4/11/2020
  */
 
-package gps;
+package table;
 
+import gps.Controller;
+import gps.Track;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
+import table.TableController;
 
 import java.io.File;
 import java.io.IOException;
@@ -201,9 +202,9 @@ public class Controller {
      */
     @FXML
     public void openTable() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Table.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../table/Table.fxml"));
         Parent part = loader.load();
-        TableController tableController = (TableController) loader.getController();
+        TableController tableController = loader.getController();
         Stage tableStage = new Stage();
         Scene tableScene = new Scene(part);
         tableStage.setScene(tableScene);

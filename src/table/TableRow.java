@@ -6,7 +6,7 @@
  * Created: 4/16/2020
  */
 
-package gps;
+package table;
 
 /**
  * Class represents one row of the table
