@@ -56,4 +56,7 @@ public class GPS {
         return tracks.size();
     }
 
+    public List<Track> getTracks() {
+        return tracks;
+    }
 }
