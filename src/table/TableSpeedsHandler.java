@@ -6,7 +6,9 @@
  * Created: 4/16/2020
  */
 
-package gps;
+package table;
+
+import gps.Track;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
