@@ -11,14 +11,10 @@ package gps;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-<<<<<<< HEAD
 import javafx.scene.Group;
-=======
 import javafx.scene.Parent;
->>>>>>> 17372ea62479663fc809b00f924c8445cbd94890
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
@@ -26,11 +22,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
-<<<<<<< HEAD
 import plotter.PlotterController;
-=======
 import table.TableController;
->>>>>>> 17372ea62479663fc809b00f924c8445cbd94890
 
 import java.io.File;
 import java.io.IOException;
