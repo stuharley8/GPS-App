@@ -14,7 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+<<<<<<< HEAD
 import javafx.scene.Group;
+=======
+import javafx.scene.Parent;
+>>>>>>> 17372ea62479663fc809b00f924c8445cbd94890
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
@@ -22,7 +26,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
+<<<<<<< HEAD
 import plotter.PlotterController;
+=======
+import table.TableController;
+>>>>>>> 17372ea62479663fc809b00f924c8445cbd94890
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +46,7 @@ public class Controller {
 
     private static ObservableList<String> choiceBoxList = FXCollections.observableArrayList();
 
-    private GPS gps = new GPS();
+    private static GPS gps = new GPS();
 
     String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 
@@ -194,7 +202,7 @@ public class Controller {
         }
     }
 
-    private static double round(double value, int places) {
+    private double round(double value, int places) {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
@@ -274,4 +282,24 @@ public class Controller {
         plotter.show();
     }
 
+     /**
+     * Opens up the table window
+     * @throws IOException an IOException
+     */
+    @FXML
+    public void openTable() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../table/Table.fxml"));
+        Parent part = loader.load();
+        TableController tableController = loader.getController();
+        Stage tableStage = new Stage();
+        Scene tableScene = new Scene(part);
+        tableStage.setScene(tableScene);
+        tableStage.setTitle("Table View");
+        tableController.loadTrackChoices(choiceBoxList);
+        tableStage.show();
+    }
+
+    public static GPS getGPS() {
+        return gps;
+    }
 }
