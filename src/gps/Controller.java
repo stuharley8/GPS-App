@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import plotter.PlotterController;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Paths;
@@ -199,88 +200,78 @@ public class Controller {
         return bd.doubleValue();
     }
 
+    /**
+     * Opens the map window
+     * @throws IOException an IOException
+     */
     @FXML
-    public void openPlotter(ActionEvent actionEvent) throws Exception {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../plotter/plotter.fxml"));
-            Region contentRootRegion = loader.load();
+    public void openPlotter() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../plotter/plotter.fxml"));
+        Region contentRootRegion = loader.load();
 
-            PlotterController controller = (PlotterController) loader.getController();
-            Stage plotter = new Stage();
+        PlotterController controller = (PlotterController) loader.getController();
+        Stage plotter = new Stage();
 
-            plotter.heightProperty().addListener((o, oldValue, newValue) -> {
-                plotter.setHeight(plotter.getWidth() + 50);
-            });
-            plotter.widthProperty().addListener((o, oldValue, newValue) -> {
-                if (plotter.getWidth() < 500) {
-                    //plotter.setHeight(plotter.getWidth()+50);
-                    plotter.setWidth(500);
-                }
-                /*if(plotter.getWidth() > 1000) {
-                    plotter.setWidth(1000);
-                }*/
-                plotter.setHeight(plotter.getWidth()  + 50);
-            });
-
-
-            //credit to Jason Winnebeck
-            //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
-            double origW = 500;
-            double origH = 500;
-
-            //If the Region containing the GUI does not already have a preferred width and height, set it.
-            //But, if it does, we can use that setting as the "standard" resolution.
-            if (contentRootRegion.getPrefWidth() == Region.USE_COMPUTED_SIZE)
-                contentRootRegion.setPrefWidth(origW);
-            else
-                origW = contentRootRegion.getPrefWidth();
-
-            if (contentRootRegion.getPrefHeight() == Region.USE_COMPUTED_SIZE)
-                contentRootRegion.setPrefHeight(origH);
-            else
-                origH = contentRootRegion.getPrefHeight();
-
-            //Wrap the resizable content in a non-resizable container (Group)
-            Group group = new Group(contentRootRegion);
-            //Place the Group in a StackPane, which will keep it centered
-            StackPane rootPane = new StackPane();
-
-            rootPane.getChildren().add(group);
-
-            plotter.setTitle("Track Plotter");
-            //Create the scene initally at the "100%" size
-            Scene scene = new Scene(rootPane, origW, origH);
-            //Bind the scene's width and height to the scaling parameters on the group
-            group.scaleXProperty().bind(scene.widthProperty().divide(origW));
-            group.scaleYProperty().bind(group.scaleXProperty());
-            //group.scaleYProperty().bind( scene.heightProperty().divide( origH ) );
-            plotter.setScene(scene);
+        plotter.heightProperty().addListener((o, oldValue, newValue) -> {
+            plotter.setHeight(plotter.getWidth() + 50);
+        });
+        plotter.widthProperty().addListener((o, oldValue, newValue) -> {
+            if (plotter.getWidth() < 500) {
+                //plotter.setHeight(plotter.getWidth()+50);
+                plotter.setWidth(500);
+            }
+            if (plotter.getWidth() > 1000) {
+                plotter.setWidth(1000);
+            }
+            plotter.setHeight(plotter.getWidth()  + 50);
+        });
 
 
-            ArrayList<Track> tracks = new ArrayList<>();
-            for (int i = 0; i < gps.getNumTracks(); i++) {
-                Track t = gps.getTrack(i);
-                boolean trackAlreadyLoaded = false;
-                for (Track track : tracks) {
-                    if (track.getName().equals(t.getName())) {
-                        trackAlreadyLoaded = true;
-                        break;
-                    }
-                }
+        //credit to Jason Winnebeck
+        //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
+        double origW = 500;
+        double origH = 500;
 
-                if (!trackAlreadyLoaded) {
-                    tracks.add(gps.getTrack(i));
+        if (contentRootRegion.getPrefWidth() == Region.USE_COMPUTED_SIZE)
+            contentRootRegion.setPrefWidth(origW);
+        else
+            origW = contentRootRegion.getPrefWidth();
+
+        if (contentRootRegion.getPrefHeight() == Region.USE_COMPUTED_SIZE)
+            contentRootRegion.setPrefHeight(origH);
+        else
+            origH = contentRootRegion.getPrefHeight();
+
+        Group group = new Group(contentRootRegion);
+        StackPane rootPane = new StackPane();
+
+        rootPane.getChildren().add(group);
+
+        plotter.setTitle("Track Plotter");
+        Scene scene = new Scene(rootPane, origW, origH);
+        group.scaleXProperty().bind(scene.widthProperty().divide(origW));
+        group.scaleYProperty().bind(group.scaleXProperty());
+        plotter.setScene(scene);
+
+        ArrayList<Track> tracks = new ArrayList<>();
+        for (int i = 0; i < gps.getNumTracks(); i++) {
+            Track t = gps.getTrack(i);
+            boolean trackAlreadyLoaded = false;
+            for (Track track : tracks) {
+                if (track.getName().equals(t.getName())) {
+                    trackAlreadyLoaded = true;
+                    break;
                 }
             }
 
-            controller.setTracks(tracks);
-
-            controller.setStage(plotter);
-            //plotter.setScene(new Scene(contentRootRegion));
-            plotter.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (!trackAlreadyLoaded) {
+                tracks.add(gps.getTrack(i));
+            }
         }
+
+        controller.setTracks(tracks);
+
+        plotter.show();
     }
 
 }

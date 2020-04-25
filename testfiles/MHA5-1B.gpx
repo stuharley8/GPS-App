@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+   <trk>
+    <name>Square Next to Letter C</name>
+    <trkseg>
+      <trkpt lat="43.0478162" lon="-88.2902527">
+        <ele>275.6</ele>
+        <time>2017-09-01T12:06:22Z</time>
+      </trkpt>
+      <trkpt lat="43.1816478" lon="-88.2909393">
+        <ele>276.6</ele>
+        <time>2017-09-01T12:06:23Z</time>
+      </trkpt>
+      <trkpt lat="43.1806464" lon="-88.4777069">
+        <ele>275.0</ele>
+        <time>2017-09-01T12:06:33Z</time>
+      </trkpt>
+      <trkpt lat="43.0463108" lon="-88.4770203">
+        <ele>275.0</ele>
+        <time>2017-09-01T12:06:35Z</time>
+      </trkpt>
+      <trkpt lat="43.0463108" lon="-88.3005524">
+        <ele>274.6</ele>
+        <time>2017-09-01T12:06:40Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
