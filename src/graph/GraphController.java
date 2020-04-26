@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
@@ -29,11 +30,14 @@ public class GraphController {
     public Pane mapArea;
     List<Track> tracks;
 
+    @FXML
     NumberAxis xAxis = new NumberAxis();
+    @FXML
     NumberAxis yAxis = new NumberAxis();
     private static final double MAP_DIMENSIONS = 500;
     private static final double MAP_CENTER = MAP_DIMENSIONS / 2.0;
     private static final double MAP_SCALE = MAP_DIMENSIONS / 2.0;
+    private static final int EARTH_RADIUS_METERS = 6371000;
     private static double MAX_DISTANCE;
     private static double MAX_X;
     private static double MAX_Y;
@@ -48,18 +52,19 @@ public class GraphController {
             }
         }
 
-
-//        for (Track track : this.tracks) {
-//            Point minPoint = new Point(track.getMinLatitude(), track.getMinLongitude());
-//            Point maxPoint = new Point(track.getMaxLatitude(), track.getMaxLongitude());
-//            double [] array = coordConverstion(minPoint, maxPoint, 0,0);
-//            if (array[0] > MAX_X) {
-//                MAX_X = array[0];
-//            }
-//            if (array[1] > MAX_Y) {
-//                MAX_Y = array[1];
-//            }
-//        }
+        for (Track track : this.tracks) {
+            double distance = 0;
+            double time = 0;
+            XYChart.Series points = new XYChart.Series();
+            points.setName(track.getName());
+            List<Point> pointList = track.getPoints();
+            for (int i = 0; i < pointList.size()-1; i++){
+                distance += calculateDistance(pointList.get(i), pointList.get(i+1));
+                time += calculateTime(pointList.get(i), pointList.get(i+1));
+                points.getData().add(new XYChart.Data(time, distance));
+            }
+            chart.getData().add(points);
+        }
 
         for(Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
@@ -90,6 +95,10 @@ public class GraphController {
         //redrawTable(i.getText(), i.isSelected());
     }
 
+    public void drawGraph(){
+
+    }
+
 //    private void redrawTable(String name, boolean isSelected) {
 //        table.redraw(name, isSelected);
 //    }
@@ -106,5 +115,22 @@ public class GraphController {
 //            }
 //        }
 //    }
+
+    public static double calculateDistance(Point pointA, Point pointB){
+        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
+                * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
+                * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
+        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
+                * (Math.toRadians(pointB.getLatitude()) - Math.toRadians(pointA.getLatitude()));
+        double deltaZ = pointB.getElevation() - pointA.getElevation();
+        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000;
+    }
+
+    public static double calculateTime(Point pointA, Point pointB){
+        long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
+        double seconds = totalTime / 1000.0;
+        double minutes = seconds / 60;
+        return minutes;
+    }
 
 }

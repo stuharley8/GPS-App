@@ -217,4 +217,6 @@ public class Track {
     public int getNumPoints() {
         return points.size();
     }
+
+    public List<Point> getPoints(){ return points;}
 }
