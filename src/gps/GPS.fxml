@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="250.0" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="250.0" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.Controller">
     <children>
         <MenuBar>
             <menus>
@@ -161,9 +155,9 @@
                         <Font size="18.0" />
                     </font>
                 </Label>
-            <Button disable="true" layoutX="96.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Plot" />
-            <Button layoutX="96.0" layoutY="250.0" mnemonicParsing="false" onAction="#openGraph" prefHeight="25.0" prefWidth="146.0" text="View Graph" />
-            <Button disable="true" layoutX="96.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Table" />
+                <Button onAction="#openPlotter" layoutX="96.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Plot" />
+                <Button onAction="#openGraph" layoutX="96.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Graph" />
+                <Button layoutX="96.0" layoutY="300.0" mnemonicParsing="false" onAction="#openTable" prefHeight="25.0" prefWidth="146.0" text="View Table" />
             </children>
         </AnchorPane>
     </children>
