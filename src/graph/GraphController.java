@@ -1,25 +1,30 @@
+/*
+ * Course: SE2800-031
+ * Spring 2020
+ * Lab: GPS
+ * Author: Noah Ernst
+ * Created: 4/15/2020
+ */
+
 package graph;
 
 import gps.Track;
 import gps.Point;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Handles everything for the LineChart that is displayed when instantiated
+ */
 public class GraphController {
 
     @FXML
@@ -87,7 +92,6 @@ public class GraphController {
 
     public void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
-//        System.out.println(i.getText() + " was clicked. It is now " + i.isSelected());
         Track track = null;
         for (Track t:tracks
         ) {
@@ -155,7 +159,7 @@ public class GraphController {
     }
 
 
-    private static double calculateDistance(Point pointA, Point pointB){
+    private double calculateDistance(Point pointA, Point pointB){
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
                 * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
                 * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
@@ -165,7 +169,7 @@ public class GraphController {
         return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000;
     }
 
-    private static double calculateTime(Point pointA, Point pointB){
+    private double calculateTime(Point pointA, Point pointB){
         long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
         double seconds = totalTime / 1000.0;
         double minutes = seconds / 60;
