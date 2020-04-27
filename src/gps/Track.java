@@ -218,6 +218,7 @@ public class Track {
         return points.size();
     }
 
+    public List<Point> getPoints() { return points; }
     /**
      * Returns the point at the specified index
      * @param index the index
