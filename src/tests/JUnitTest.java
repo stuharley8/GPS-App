@@ -11,6 +11,7 @@ package tests;
 import gps.*;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
+import table.TableSpeedsHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -437,5 +438,67 @@ public class JUnitTest {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    /**
+     * Tests the table to see if it is displaying the correct info
+     */
+    @Test
+    public void testTimesAtVariousSpeedsTable() {
+        TableSpeedsHandler tsh = null;
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\MHA5-15-All60.txt");
+            tsh = new TableSpeedsHandler(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(tsh.getThreeLessMin(), 60);
+        assertEquals(tsh.getSevenLessMin(), 60);
+        assertEquals(tsh.getTenLessMin(), 60);
+        assertEquals(tsh.getFifteenLessMin(), 60);
+        assertEquals(tsh.getTwentyLessMin(), 60);
+        assertEquals(tsh.getTwentyGreaterMin(), 60);
+        assertEquals(tsh.getPercentThreeLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentSevenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentTenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentFifteenLess(), 16.67, DELTA);
+        assertEquals(tsh.getPercentTwentyLess(), 16.67 ,DELTA);
+        assertEquals(tsh.getPercentTwentyGreater(), 16.67, DELTA);
+    }
+
+    /**
+     * Tests the table to see if it is displaying the correct info. The times double every row
+     */
+    @Test
+    public void testTimesAtVariousSpeedsTableDoubles() {
+        TableSpeedsHandler tsh = null;
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\MHA5-15-Doubles.gpx");
+            tsh = new TableSpeedsHandler(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(tsh.getThreeLessMin(), 0);
+        assertEquals(tsh.getSevenLessMin(), 10);
+        assertEquals(tsh.getTenLessMin(), 20);
+        assertEquals(tsh.getFifteenLessMin(), 40);
+        assertEquals(tsh.getTwentyLessMin(), 80);
+        assertEquals(tsh.getTwentyGreaterMin(), 160);
+        assertEquals(tsh.getPercentThreeLess(), 0, DELTA);
+        assertEquals(tsh.getPercentSevenLess(), 3.23, DELTA);
+        assertEquals(tsh.getPercentTenLess(), 6.45, DELTA);
+        assertEquals(tsh.getPercentFifteenLess(), 12.9, DELTA);
+        assertEquals(tsh.getPercentTwentyLess(), 25.81 ,DELTA);
+        assertEquals(tsh.getPercentTwentyGreater(), 51.61, DELTA);
     }
 }

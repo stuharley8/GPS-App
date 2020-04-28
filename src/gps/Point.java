@@ -45,6 +45,20 @@ public class Point {
 
     }
 
+    public Point(double latitude, double longitude, double elevation) {
+        if (Math.abs(latitude) > MAX_LATITUDE) {
+            throw new IllegalArgumentException("Invalid latitude of " + latitude);
+        }
+        if (Math.abs(longitude) > MAX_LONGITUDE) {
+            throw new IllegalArgumentException("Invalid longitude of " + longitude);
+        }
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.elevation = -1;
+        this.date = null;
+
+    }
+
     /**
      * Constructor used for testing
      *
