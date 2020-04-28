@@ -8,6 +8,7 @@
 
 package gps;
 
+import graph.GraphController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -199,6 +200,23 @@ public class Controller {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    /**
+     * Opens up the graph window
+     * @throws IOException an IOException
+     */
+    @FXML
+    public void openGraph() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../graph/Graph.fxml"));
+        Parent part = loader.load();
+        GraphController graphController = (GraphController) loader.getController();
+        Stage graphStage = new Stage();
+        Scene graphScene = new Scene(part);
+        graphStage.setScene(graphScene);
+        graphStage.setTitle("Graph View");
+        graphController.setTracks(gps.getTracks());
+        graphStage.show();
     }
 
     /**

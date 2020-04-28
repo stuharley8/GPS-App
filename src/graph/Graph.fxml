@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="container" prefHeight="603.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graph.GraphController">
+   <children>
+       <fx:define>
+           <ToggleGroup fx:id="units" />
+       </fx:define>
+      <LineChart fx:id="chart" layoutY="27.0" legendVisible="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="932.0" style="">
+        <xAxis>
+          <NumberAxis label="Time(min)" side="BOTTOM" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" label="Distance (km/mi)" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="932.0">
+        <menus>
+            <Menu fx:id="tracksMenu" mnemonicParsing="false" text="Tracks" />
+          <Menu mnemonicParsing="false" text="Data">
+            <items>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" />
+                  <RadioMenuItem mnemonicParsing="false" text="Elevation vs Time" />
+                  <RadioMenuItem mnemonicParsing="false" text="Elevation Gain vs Time" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Units">
+              <items>
+                <RadioMenuItem fx:id="miles" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Miles">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="units" />
+                     </toggleGroup></RadioMenuItem>
+                <RadioMenuItem fx:id="kilometers" mnemonicParsing="false" onAction="#drawAllSelectedTracks" selected="true" text="Kilometers" toggleGroup="$units" />
+              </items>
+          </Menu>
+
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>
