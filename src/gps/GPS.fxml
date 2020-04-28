@@ -155,10 +155,9 @@
                         <Font size="18.0" />
                     </font>
                 </Label>
-                <Button onAction="#openPlotter" layoutX="96.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Plot" />
-                <Button onAction="#openGraph" layoutX="96.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Graph" />
-                <Button layoutX="96.0" layoutY="300.0" mnemonicParsing="false" onAction="#openTable" prefHeight="25.0" prefWidth="146.0" text="View Table" />
+            <Button onAction="#openPlotter" layoutX="96.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Plot" />
+            <Button onAction="#openGraph" layoutX="96.0" layoutY="250.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="146.0" text="View Graph" />
+            <Button layoutX="96.0" layoutY="300.0" mnemonicParsing="false" onAction="#openTable" prefHeight="25.0" prefWidth="146.0" text="View Table" />
             </children>
         </AnchorPane>
     </children>
-</VBox>

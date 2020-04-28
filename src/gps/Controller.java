@@ -276,7 +276,7 @@ public class Controller {
         plotter.show();
     }
 
-    /**
+     /**
      * Opens up the table window
      * @throws IOException an IOException
      */
@@ -292,6 +292,11 @@ public class Controller {
         tableController.loadTrackChoices(choiceBoxList);
         tableStage.show();
     }
+
+    public static GPS getGPS() {
+        return gps;
+    }
+
     /**
      * Opens up the graph window
      * @throws IOException an IOException
@@ -307,9 +312,5 @@ public class Controller {
         graphStage.setTitle("Graph View");
         graphController.setTracks(gps.getTracks());
         graphStage.show();
-    }
-
-    public static GPS getGPS() {
-        return gps;
     }
 }
