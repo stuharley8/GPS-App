@@ -115,6 +115,23 @@ public class Track {
     }
 
     /**
+     * Calculates the grade between two points
+     *
+     * @param pointA first point values used to calculate the grade
+     * @param pointB second point values used to calculate the grade
+     * @return the grade value between pointA and PointB in percent
+     */
+    public double gradeCalc(Point pointA, Point pointB) {
+        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
+                * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
+                * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
+        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
+                * (Math.toRadians(pointB.getLatitude()) - Math.toRadians(pointA.getLatitude()));
+        double deltaZ = pointB.getElevation() - pointA.getElevation();
+        return deltaZ/Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) * 100;
+    }
+
+    /**
      * Calculates the average speed across the entire track of points
      */
     private void aveSpeedCalc() {
