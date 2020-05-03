@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
-    <name>gps Test: Doubles Every Row </name>
+    <name>gps Test: Speed Doubles Every Row </name>
     <trkseg>
       <trkpt lat="43.30000000000000" lon="-87.90000000000000">
         <ele>500.0000000000000</ele>
