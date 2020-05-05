@@ -8,6 +8,7 @@
 
 package plotter;
 
+import gps.Point;
 import gps.Track;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +41,9 @@ public class PlotterController {
     private double minYBound = Double.MAX_VALUE;
     private double maxYBound = -Double.MAX_VALUE;
 
+    private static final double PADDING = 5;
     private static final double MAP_DIMENSIONS = 500;
-    private static final double MAP_CENTER = MAP_DIMENSIONS / 2;
+    private static final double MAP_CENTER = (MAP_DIMENSIONS + PADDING + PADDING) / 2;
     private static final double MAP_OFFSET = MAP_DIMENSIONS / 2;
 
     private double originX;
@@ -48,6 +51,12 @@ public class PlotterController {
 
     private double xRatio;
     private double yRatio;
+
+    private double maxXDistance;
+    private double maxYDistance;
+
+    private double yOffset;
+    private double xOffset;
 
     private PlotterTable table;
 
@@ -66,20 +75,9 @@ public class PlotterController {
 
         table = new PlotterTable(this.tracks);
 
-        //draw axis
-        CanvasLayer canvasLayer = new CanvasLayer(null, MAP_DIMENSIONS);
-        GraphicsContext gc = canvasLayer.getGraphicsContext2D();
-        gc.setLineWidth(2);
-        gc.setStroke(Color.BLACK);
-        gc.setFill(Color.BLACK);
-        gc.strokeLine(MAP_CENTER + MAP_OFFSET, 0, MAP_CENTER + MAP_OFFSET, MAP_DIMENSIONS * 2);
-        gc.strokeLine(0, MAP_DIMENSIONS, MAP_DIMENSIONS * 2, MAP_DIMENSIONS);
-
         convertTracks();
         getBounds();
         setRatios();
-
-        mapArea.getChildren().add(canvasLayer);
 
         for (Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
@@ -94,7 +92,83 @@ public class PlotterController {
 
         drawTracks();
 
+        drawMarkerLabels();
+
         mapArea.getChildren().add(table);
+    }
+
+    /**
+     * Draws scaling marker units for visualizing distance
+     */
+    private void drawMarkerLabels() {
+        CanvasLayer canvasLayer = new CanvasLayer(null, MAP_DIMENSIONS);
+        GraphicsContext gc = canvasLayer.getGraphicsContext2D();
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
+
+        gc.setLineWidth(1);
+        double labelY = 480;
+
+        double distance = (maxXDistance > maxYDistance) ? maxXDistance : maxYDistance;
+        double interval = distance / 10;
+
+        int roundedInterval = ((int) (interval / 10) + 1) * 10;
+        double pixelInterval = 50;
+        double labelLineDistance = (roundedInterval * pixelInterval) / interval;
+        System.out.println(distance);
+        System.out.println(interval);
+        System.out.println(roundedInterval);
+        System.out.println(labelLineDistance);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        double intervalToMiles = (double)roundedInterval * 0.621371192;
+        while (labelLineDistance > 400) {
+            roundedInterval /= 2;
+            labelLineDistance /= 2;
+        }
+
+        double markerOffset = PADDING + 10;
+
+        gc.moveTo(markerOffset, labelY);
+        gc.lineTo(markerOffset + labelLineDistance, labelY);
+        gc.strokeLine(markerOffset, labelY - 3, markerOffset, labelY + 3);
+        gc.strokeLine(markerOffset + labelLineDistance, labelY - 3, markerOffset + labelLineDistance, labelY + 3);
+        gc.strokeText(roundedInterval + " km", markerOffset + labelLineDistance + 5, labelY - 7);
+        gc.strokeText(df.format(intervalToMiles) + " miles", markerOffset + labelLineDistance + 5, labelY + 10);
+        gc.stroke();
+
+        mapArea.getChildren().add(canvasLayer);
+    }
+
+    private double[] getDistance() {
+        double minLat = Double.MAX_VALUE;
+        double maxLat = -Double.MAX_VALUE;
+        double minLong = Double.MAX_VALUE;
+        double maxLong = -Double.MAX_VALUE;
+        for (Track track : tracks) {
+            if (minLat > track.getMinLatitude()) {
+                minLat = track.getMinLatitude();
+            }
+            if (maxLat < track.getMaxLatitude()) {
+                maxLat = track.getMaxLatitude();
+            }
+            if (minLong > track.getMinLongitude()) {
+                minLong = track.getMinLongitude();
+            }
+            if (maxLong < track.getMaxLongitude()) {
+                maxLong = track.getMaxLongitude();
+            }
+        }
+        Point minXPoint = new Point(minLat, minLong);
+        Point maxXPoint = new Point(minLat, maxLong);
+        Point minYPoint = new Point(minLat, minLong);
+        Point maxYPoint = new Point(maxLat, minLong);
+
+        double x = Track.distanceCalc(maxXPoint, minXPoint);
+        double y = Track.distanceCalc(maxYPoint, minYPoint);
+
+        return new double[]{x, y};
     }
 
     private void setRatios() {
@@ -150,12 +224,10 @@ public class PlotterController {
         if (originX == Double.MAX_VALUE) {
             originX = scaleX(track.getOriginX());
             originY = scaleY(track.getOriginY(), 0);
+            drawOriginAxis();
         }
         double trackOriginX = scaleX(track.getOriginX());
         double trackOriginY = scaleY(track.getOriginY(), originY);
-
-        double xOffset = (MAP_OFFSET + MAP_CENTER) - originX;
-        double yOffset = MAP_DIMENSIONS;
 
         GraphicsContext gc = track.getGraphicsContext2D();
         Color color = new Color(Math.random(), Math.random(), Math.random(), 1.0);
@@ -172,6 +244,41 @@ public class PlotterController {
         }
         gc.stroke();
         mapArea.getChildren().add(track);
+    }
+
+    private void drawOriginAxis() {
+        //offsets for centering
+        double lowY = scaleY(minYBound, originY);
+        double highY = scaleY(maxYBound, originY);
+        double midY = (lowY - highY) / 2;
+
+        double highX = scaleX(maxXBound);
+
+        yOffset = MAP_CENTER - midY + originY;
+        xOffset = (MAP_DIMENSIONS - highX) / 2 + PADDING;
+
+        //draw axis
+        CanvasLayer canvasLayer = new CanvasLayer(null, MAP_DIMENSIONS);
+        GraphicsContext gc = canvasLayer.getGraphicsContext2D();
+        gc.setLineWidth(1);
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.BLACK);
+        double offset = xOffset + originX;
+        gc.strokeLine(offset, PADDING, offset, MAP_CENTER * 2);
+        gc.strokeLine( PADDING, yOffset, MAP_DIMENSIONS + PADDING, yOffset);
+        for (int i = 0; i < 11; ++i) {
+            gc.strokeLine(offset + (i * 50), yOffset - 5, offset + (i * 50), yOffset + 5);
+            gc.strokeLine(offset - (i * 50), yOffset - 5, offset - (i * 50), yOffset + 5);
+            gc.strokeLine(offset - 5, yOffset + (i * 50), offset + 5, yOffset + (i * 50));
+            gc.strokeLine(offset - 5, yOffset - (i * 50), offset + 5, yOffset - (i * 50));
+        }
+
+        double[] distances = getDistance();
+
+        maxXDistance = distances[0];
+        maxYDistance = distances[1];
+
+        mapArea.getChildren().add(canvasLayer);
     }
 
     /**

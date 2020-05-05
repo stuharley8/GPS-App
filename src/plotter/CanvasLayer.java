@@ -32,7 +32,7 @@ public class CanvasLayer extends Canvas {
     private double originY;
 
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
-        super(MAP_DIMENSIONS * 2, MAP_DIMENSIONS * 2);
+        super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);
         if (track == null) {
             this.name = "map element";
         } else {
@@ -84,7 +84,7 @@ public class CanvasLayer extends Canvas {
      * @param point current point
      * @return
      */
-    private double[] singleCoordinateConversion(Point point) {
+    private static double[] singleCoordinateConversion(Point point) {
 //        double r = 6378137 + (Math.toRadians(point.getElevation()));
         double r = 6378137;
         double X = r * (Math.toRadians(point.getLongitude())) * Math.cos(Math.toRadians(point.getLatitude()));
@@ -102,7 +102,7 @@ public class CanvasLayer extends Canvas {
      * @param prevY    previous point's converted y value
      * @return
      */
-    private double[] deltaCoordinateConversion(Point previous, Point current, double prevX, double prevY) {
+    private static double[] deltaCoordinateConversion(Point previous, Point current, double prevX, double prevY) {
         double prevLong = Math.toRadians(previous.getLongitude());
         double prevLat = Math.toRadians(previous.getLatitude());
         double currentLong = Math.toRadians(current.getLongitude());
