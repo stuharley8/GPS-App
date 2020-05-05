@@ -43,8 +43,7 @@ public class PlotterController {
 
     private static final double PADDING = 5;
     private static final double MAP_DIMENSIONS = 500;
-    private static final double MAP_CENTER = (MAP_DIMENSIONS + PADDING + PADDING) / 2;
-    private static final double MAP_OFFSET = MAP_DIMENSIONS / 2;
+    private static final double MAP_CENTER = (MAP_DIMENSIONS + (2 * PADDING)) / 2;
 
     private double originX;
     private double originY;
@@ -91,7 +90,6 @@ public class PlotterController {
         }
 
         drawTracks();
-
         drawMarkerLabels();
 
         mapArea.getChildren().add(table);
@@ -115,10 +113,6 @@ public class PlotterController {
         int roundedInterval = ((int) (interval / 10) + 1) * 10;
         double pixelInterval = 50;
         double labelLineDistance = (roundedInterval * pixelInterval) / interval;
-        System.out.println(distance);
-        System.out.println(interval);
-        System.out.println(roundedInterval);
-        System.out.println(labelLineDistance);
 
         DecimalFormat df = new DecimalFormat("#.00");
 
