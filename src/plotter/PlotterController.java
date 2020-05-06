@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,24 +60,38 @@ public class PlotterController {
 
     private PlotterTable table;
 
+    private HashMap<Integer, Color> colors = new HashMap<>();
+
     public void setTracks(List<Track> tracks) {
+        colors.put(0, Color.RED);
+        colors.put(1, Color.ORANGE);
+        colors.put(2, Color.GREEN);
+        colors.put(3, Color.CADETBLUE);
+        colors.put(4, Color.DARKBLUE);
+        colors.put(5, Color.VIOLET);
+        colors.put(6, Color.DARKORCHID);
+        colors.put(7, Color.MAGENTA);
+        colors.put(8, Color.CYAN);
+        colors.put(9, Color.BLACK);
+
         originX = Double.MAX_VALUE;
         originY = Double.MAX_VALUE;
 
         //ignores track if less than 2 points
         this.tracks = new ArrayList<>();
         this.canvasTracks = new ArrayList<>();
+        int count = 0;
         for (Track track : tracks) {
-            if (track.getPoints().size() > 1) {
+            if (track.getPoints().size() > 1 && count < 10) {
                 this.tracks.add(track);
             }
+            ++count;
         }
 
         table = new PlotterTable(this.tracks);
 
         convertTracks();
-        getBounds();
-        setRatios();
+
 
         for (Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
@@ -89,6 +104,8 @@ public class PlotterController {
             tracksMenu.getItems().add(item);
         }
 
+        getBounds();
+        setRatios();
         drawTracks();
         drawMarkerLabels();
 
@@ -116,7 +133,7 @@ public class PlotterController {
 
         DecimalFormat df = new DecimalFormat("#.00");
 
-        double intervalToMiles = (double)roundedInterval * 0.621371192;
+        double intervalToMiles = (double) roundedInterval * 0.621371192;
         while (labelLineDistance > 400) {
             roundedInterval /= 2;
             labelLineDistance /= 2;
@@ -124,13 +141,11 @@ public class PlotterController {
 
         double markerOffset = PADDING + 10;
 
-        gc.moveTo(markerOffset, labelY);
-        gc.lineTo(markerOffset + labelLineDistance, labelY);
+        gc.strokeLine(markerOffset, labelY, markerOffset + labelLineDistance, labelY);
         gc.strokeLine(markerOffset, labelY - 3, markerOffset, labelY + 3);
         gc.strokeLine(markerOffset + labelLineDistance, labelY - 3, markerOffset + labelLineDistance, labelY + 3);
         gc.strokeText(roundedInterval + " km", markerOffset + labelLineDistance + 5, labelY - 7);
         gc.strokeText(df.format(intervalToMiles) + " miles", markerOffset + labelLineDistance + 5, labelY + 10);
-        gc.stroke();
 
         mapArea.getChildren().add(canvasLayer);
     }
@@ -140,18 +155,20 @@ public class PlotterController {
         double maxLat = -Double.MAX_VALUE;
         double minLong = Double.MAX_VALUE;
         double maxLong = -Double.MAX_VALUE;
-        for (Track track : tracks) {
-            if (minLat > track.getMinLatitude()) {
-                minLat = track.getMinLatitude();
-            }
-            if (maxLat < track.getMaxLatitude()) {
-                maxLat = track.getMaxLatitude();
-            }
-            if (minLong > track.getMinLongitude()) {
-                minLong = track.getMinLongitude();
-            }
-            if (maxLong < track.getMaxLongitude()) {
-                maxLong = track.getMaxLongitude();
+        for (CanvasLayer track : canvasTracks) {
+            if (track.isSelected()) {
+                if (minLat > track.getMinLatitude()) {
+                    minLat = track.getMinLatitude();
+                }
+                if (maxLat < track.getMaxLatitude()) {
+                    maxLat = track.getMaxLatitude();
+                }
+                if (minLong > track.getMinLongitude()) {
+                    minLong = track.getMinLongitude();
+                }
+                if (maxLong < track.getMaxLongitude()) {
+                    maxLong = track.getMaxLongitude();
+                }
             }
         }
         Point minXPoint = new Point(minLat, minLong);
@@ -179,23 +196,27 @@ public class PlotterController {
 
     private void drawTracks() {
         for (CanvasLayer track : canvasTracks) {
-            drawPoints(track);
+            if (track.isSelected()) {
+                drawPoints(track);
+            }
         }
     }
 
     private void getBounds() {
         for (CanvasLayer track : canvasTracks) {
-            if (track.getMinX() < minXBound) {
-                minXBound = track.getMinX();
-            }
-            if (track.getMaxX() > maxXBound) {
-                maxXBound = track.getMaxX();
-            }
-            if (track.getMinY() < minYBound) {
-                minYBound = track.getMinY();
-            }
-            if (track.getMaxY() > maxYBound) {
-                maxYBound = track.getMaxY();
+            if (track.isSelected()) {
+                if (track.getMinX() < minXBound) {
+                    minXBound = track.getMinX();
+                }
+                if (track.getMaxX() > maxXBound) {
+                    maxXBound = track.getMaxX();
+                }
+                if (track.getMinY() < minYBound) {
+                    minYBound = track.getMinY();
+                }
+                if (track.getMaxY() > maxYBound) {
+                    maxYBound = track.getMaxY();
+                }
             }
         }
     }
@@ -224,19 +245,23 @@ public class PlotterController {
         double trackOriginY = scaleY(track.getOriginY(), originY);
 
         GraphicsContext gc = track.getGraphicsContext2D();
-        Color color = new Color(Math.random(), Math.random(), Math.random(), 1.0);
+        gc.clearRect(0, 0, track.getWidth(), track.getHeight());
+        Color color = colors.get(getIndexOfTrack(track));
         table.setTrackColor(track.getName(), color);
+
         gc.setFill(color);
         gc.setStroke(color);
         gc.setLineWidth(2);
-        gc.moveTo(xOffset + trackOriginX, yOffset + trackOriginY);
+        double prevX = xOffset + trackOriginX;
+        double prevY = yOffset + trackOriginY;
 
         for (double[] xy : track.getTrackXYFromOffset()) {
             double x = scaleX(xy[0]);
             double y = scaleY(xy[1], originY);
-            gc.lineTo(xOffset + x, yOffset + y);
+            gc.strokeLine(prevX, prevY, xOffset + x, yOffset + y);
+            prevX = xOffset + x;
+            prevY = yOffset + y;
         }
-        gc.stroke();
         mapArea.getChildren().add(track);
     }
 
@@ -259,7 +284,7 @@ public class PlotterController {
         gc.setFill(Color.BLACK);
         double offset = xOffset + originX;
         gc.strokeLine(offset, PADDING, offset, MAP_CENTER * 2);
-        gc.strokeLine( PADDING, yOffset, MAP_DIMENSIONS + PADDING, yOffset);
+        gc.strokeLine(PADDING, yOffset, MAP_DIMENSIONS + PADDING, yOffset);
         for (int i = 0; i < 11; ++i) {
             gc.strokeLine(offset + (i * 50), yOffset - 5, offset + (i * 50), yOffset + 5);
             gc.strokeLine(offset - (i * 50), yOffset - 5, offset - (i * 50), yOffset + 5);
@@ -313,28 +338,31 @@ public class PlotterController {
 
     private void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
+        mapArea.getChildren().clear();
         if (i.isSelected()) {
-            drawPoints(getTrackInTracks(i.getText()));
+            getTrackInTracks(i.getText()).setSelected(true);
         } else {
-            removeTrackFromScene(i.getText());
+            getTrackInTracks(i.getText()).setSelected(false);
         }
+        redrawMap();
         redrawTable(i.getText(), i.isSelected());
+        mapArea.getChildren().add(table);
+    }
+
+    private void redrawMap() {
+        minXBound = Double.MAX_VALUE;
+        maxXBound = -Double.MAX_VALUE;
+        minYBound = Double.MAX_VALUE;
+        maxYBound = -Double.MAX_VALUE;
+        originX = Double.MAX_VALUE;
+        getBounds();
+        setRatios();
+        drawTracks();
+        drawMarkerLabels();
     }
 
     private void redrawTable(String name, boolean isSelected) {
         table.redraw(name, isSelected);
-    }
-
-    private void removeTrackFromScene(String name) {
-        ObservableList<Node> nodes = mapArea.getChildren();
-
-        for (Node node : nodes) {
-            CanvasLayer layer = (CanvasLayer) node;
-            if (layer.getName().equals(name)) {
-                nodes.remove(node);
-                break;
-            }
-        }
     }
 
     private CanvasLayer getTrackInTracks(String name) {
@@ -344,5 +372,16 @@ public class PlotterController {
             }
         }
         return null;
+    }
+
+    private int getIndexOfTrack(CanvasLayer t) {
+        int index = 0;
+        for (CanvasLayer track : canvasTracks) {
+            if (track == t) {
+                return index;
+            }
+            ++index;
+        }
+        return -1;
     }
 }

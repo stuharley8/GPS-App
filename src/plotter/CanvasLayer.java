@@ -11,6 +11,7 @@ package plotter;
 import gps.Point;
 import gps.Track;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +28,29 @@ public class CanvasLayer extends Canvas {
     private double minY;
     private double maxY;
 
+    private double minLatitude;
+    private double maxLatitude;
+    private double minLongitude;
+    private double maxLongitude;
+    private Color color;
+
     private String name;
     private double originX;
     private double originY;
+    private boolean isSelected;
 
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
         super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);
+
+        isSelected = true;
         if (track == null) {
             this.name = "map element";
         } else {
             this.name = track.getName();
+            minLatitude = track.getMinLatitude();
+            maxLatitude = track.getMaxLatitude();
+            minLongitude = track.getMinLongitude();
+            maxLongitude = track.getMaxLongitude();
             convertPointsToXY(track);
         }
     }
@@ -145,5 +159,34 @@ public class CanvasLayer extends Canvas {
 
     public double getMaxY() {
         return maxY;
+    }
+
+    public boolean isSelected() { return isSelected;
+    }
+
+    public void setSelected(boolean selected) {this.isSelected = selected;}
+
+    public double getMinLatitude() {
+        return minLatitude;
+    }
+
+    public double getMaxLatitude() {
+        return maxLatitude;
+    }
+
+    public double getMinLongitude() {
+        return minLongitude;
+    }
+
+    public double getMaxLongitude() {
+        return maxLongitude;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
