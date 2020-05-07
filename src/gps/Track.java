@@ -104,7 +104,7 @@ public class Track {
      * @param pointB Second point values used to calculate the distance
      * @return The distance value between pointA and pointB in kilometers
      */
-    public double distanceCalc(Point pointA, Point pointB) {
+    public static double distanceCalc(Point pointA, Point pointB) {
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
                 * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
                 * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
