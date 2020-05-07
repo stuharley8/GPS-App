@@ -7,6 +7,9 @@ import javafx.scene.chart.XYChart;
 
 import java.util.List;
 
+/**
+ * Class that handles drawing the different types of graphs
+ */
 public class GraphHandler {
 
     private static final int EARTH_RADIUS_METERS = 6371000;
