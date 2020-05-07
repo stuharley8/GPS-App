@@ -66,14 +66,19 @@ public class GraphHandler {
         List<Point> pointList = track.getPoints();
         double gain = 0;
         double time = 0;
-        for(int i = 0; i < pointList.size()-1; i++){
-            time += calculateTime(pointList.get(i), pointList.get(i+1));
+        double initialTime = pointList.get(0).getDate().getTime();
+        double lastElevation = 0;
+        for(int i = 0; i < pointList.size(); i++){
+            time += ((pointList.get(i).getDate().getTime()- initialTime)/1000) / 60;
             XYChart.Data point  = new XYChart.Data(time, pointList.get(i).getElevation());
             Circle circle = new Circle(1.0);
             circle.setVisible(false);
             point.setNode(circle);
             points.getData().add(point);
-            gain += calculateElevationGain(pointList.get(i), pointList.get(i+1));
+            if(pointList.get(i).getElevation() >= lastElevation){
+                gain =+ pointList.get(i).getElevation() - lastElevation ;
+            }
+            lastElevation = pointList.get(i).getElevation();
         }
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
