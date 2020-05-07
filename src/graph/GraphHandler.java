@@ -2,8 +2,11 @@ package graph;
 
 import gps.Point;
 import gps.Track;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 import java.util.List;
 
@@ -65,7 +68,11 @@ public class GraphHandler {
         double time = 0;
         for(int i = 0; i < pointList.size()-1; i++){
             time += calculateTime(pointList.get(i), pointList.get(i+1));
-            points.getData().add(new XYChart.Data(time, pointList.get(i).getElevation()));
+            XYChart.Data point  = new XYChart.Data(time, pointList.get(i).getElevation());
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
             gain += calculateElevationGain(pointList.get(i), pointList.get(i+1));
         }
         String rounded = String.format("%.3f", gain);
@@ -88,7 +95,11 @@ public class GraphHandler {
         for(int i = 0; i < pointList.size()-1; i++){
             time += calculateTime(pointList.get(i), pointList.get(i+1));
             gain += calculateElevationGain(pointList.get(i), pointList.get(i+1));
-            points.getData().add(new XYChart.Data(time, gain));
+            XYChart.Data point = new XYChart.Data(time, gain);
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
         }
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
@@ -128,7 +139,11 @@ public class GraphHandler {
             }
 
             time += calculateTime(pointList.get(i), pointList.get(i+1));
-            points.getData().add(new XYChart.Data(time, distance));
+            XYChart.Data point = new XYChart.Data(time, distance);
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
         }
         return distance;
     }
