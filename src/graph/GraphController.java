@@ -33,6 +33,14 @@ public class GraphController {
     public AnchorPane container;
     public Menu tracksMenu;
 
+    @FXML
+    RadioMenuItem dVT;
+    @FXML
+    RadioMenuItem eVT;
+    @FXML
+    RadioMenuItem eGVT;
+
+
     private GraphHandler graphHandler;
     List<Track> tracks;
     List<Track> selectedTracks;
@@ -45,14 +53,27 @@ public class GraphController {
     RadioMenuItem miles;
     @FXML
     RadioMenuItem kilometers;
-
-    private static final int EARTH_RADIUS_METERS = 6371000;
-    private static final double KM_TO_MILES = 0.621371;
-
+    @FXML
+    Menu unitsMenu;
 
     @FXML
     public void drawAllSelectedTracks(){
-        graphHandler.drawAllGraphs();
+        graphHandler = new GraphHandler(chart, selectedTracks,miles.isSelected());
+        if(dVT.isSelected()){
+            graphHandler.drawAllDistanceGraphs();
+            yAxis.setLabel("Distance (km/mi)");
+            unitsMenu.setDisable(false);
+        }else if(eVT.isSelected()){
+            graphHandler.drawAllElevationGraphs();
+            yAxis.setLabel("Elevation (m)");
+            unitsMenu.setDisable(true);
+
+        }else if(eGVT.isSelected()){
+            graphHandler.drawAllElevationGainGraphs();
+            yAxis.setLabel("Elevation Gain (m)");
+            unitsMenu.setDisable(true);
+        }
+
     }
 
     public void setTracks(List<Track> tracks) {
@@ -81,10 +102,12 @@ public class GraphController {
         }
         selectedTracks = new ArrayList<>(this.tracks);
         graphHandler = new GraphHandler(chart, selectedTracks, miles.isSelected());
-        graphHandler.drawAllGraphs();
+        graphHandler.drawAllDistanceGraphs();
 
 
     }
+
+
     public void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
         Track track = null;
@@ -104,6 +127,6 @@ public class GraphController {
             graphHandler.setSelectedTracks(selectedTracks);
 
         }
-        graphHandler.drawAllGraphs();
+        drawAllSelectedTracks();
     }
 }

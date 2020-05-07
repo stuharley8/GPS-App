@@ -23,10 +23,24 @@ public class GraphHandler {
         this.isMiles = isMiles;
     }
 
-    public void drawAllGraphs(){
+    public void drawAllDistanceGraphs(){
         chart.getData().clear();
         for (Track track : this.selectedTracks) {
-            drawGraph(track.getName());
+            drawDistanceGraph(track.getName());
+        }
+    }
+
+    public void drawAllElevationGraphs(){
+        chart.getData().clear();
+        for (Track track : this.selectedTracks) {
+            drawElevationGraph(track.getName());
+        }
+    }
+
+    public void drawAllElevationGainGraphs(){
+        chart.getData().clear();
+        for (Track track : this.selectedTracks) {
+            drawElevationGainGraph(track.getName());
         }
     }
 
@@ -34,7 +48,52 @@ public class GraphHandler {
         this.selectedTracks = selectedTracks;
     }
 
-    private void drawGraph(String name){
+    private void drawElevationGraph(String name){
+        Track track = null;
+        for (Track t:selectedTracks
+        ) {
+            if (t.getName().equals(name)){
+                track = t;
+            }
+        }
+        XYChart.Series points = new XYChart.Series();
+        List<Point> pointList = track.getPoints();
+        double gain = 0;
+        double time = 0;
+        for(int i = 0; i < pointList.size()-1; i++){
+            time += calculateTime(pointList.get(i), pointList.get(i+1));
+            points.getData().add(new XYChart.Data(time, pointList.get(i).getElevation()));
+            gain += calculateElevationGain(pointList.get(i), pointList.get(i+1));
+        }
+        String rounded = String.format("%.3f", gain);
+        points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
+        chart.getData().add(points);
+    }
+
+    private void drawElevationGainGraph(String name){
+        Track track = null;
+        for (Track t:selectedTracks
+        ) {
+            if (t.getName().equals(name)){
+                track = t;
+            }
+        }
+        XYChart.Series points = new XYChart.Series();
+        List<Point> pointList = track.getPoints();
+        double gain = 0;
+        double time = 0;
+        for(int i = 0; i < pointList.size()-1; i++){
+            time += calculateTime(pointList.get(i), pointList.get(i+1));
+            gain += calculateElevationGain(pointList.get(i), pointList.get(i+1));
+            points.getData().add(new XYChart.Data(time, gain));
+        }
+        String rounded = String.format("%.3f", gain);
+        points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
+        chart.getData().add(points);
+
+    }
+
+    private void drawDistanceGraph(String name){
         Track track = null;
         for (Track t:selectedTracks
         ) {
@@ -47,18 +106,17 @@ public class GraphHandler {
         String unit = "km";
         XYChart.Series points = new XYChart.Series();
         if(isMiles){
-
             unit = "mi";
         }
 
         List<Point> pointList = track.getPoints();
-        distance = drawPoints(pointList, points, distance, time, isMiles);
+        distance = drawDistancePoints(pointList, points, distance, time, isMiles);
         String rounded = String.format("%.3f", distance);
         points.setName(track.getName() + " Total Distance: " + rounded + " " + unit);
         chart.getData().add(points);
     }
 
-    private double drawPoints(List<Point> pointList,  XYChart.Series points, double distance, double time, boolean isMiles){
+    private double drawDistancePoints(List<Point> pointList,  XYChart.Series points, double distance, double time, boolean isMiles){
         for (int i = 0; i < pointList.size()-1; i++){
             if(isMiles){
                 distance += KM_TO_MILES*calculateDistance(pointList.get(i), pointList.get(i+1));
@@ -88,6 +146,14 @@ public class GraphHandler {
         double seconds = totalTime / 1000.0;
         double minutes = seconds / 60;
         return minutes;
+    }
+
+    private double calculateElevationGain(Point pointA, Point pointB){
+        double gain = 0;
+        if(pointB.getElevation()-pointA.getElevation() > 0){
+            gain += pointB.getElevation()-pointA.getElevation();
+        }
+        return gain;
     }
 
 

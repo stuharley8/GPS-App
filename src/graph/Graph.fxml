@@ -12,6 +12,7 @@
    <children>
        <fx:define>
            <ToggleGroup fx:id="units" />
+           <ToggleGroup fx:id="data" />
        </fx:define>
       <LineChart fx:id="chart" layoutY="27.0" legendVisible="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="932.0" style="">
         <xAxis>
@@ -24,14 +25,14 @@
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="932.0">
         <menus>
             <Menu fx:id="tracksMenu" mnemonicParsing="false" text="Tracks" />
-          <Menu mnemonicParsing="false" text="Data">
+          <Menu mnemonicParsing="false" text="Data" >
             <items>
-                  <RadioMenuItem mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" />
-                  <RadioMenuItem mnemonicParsing="false" text="Elevation vs Time" />
-                  <RadioMenuItem mnemonicParsing="false" text="Elevation Gain vs Time" />
+                  <RadioMenuItem fx:id="dVT" selected="true" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="eVT" mnemonicParsing="false" text="Elevation vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" text="Elevation Gain vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Units">
+          <Menu mnemonicParsing="false" text="Units" fx:id="unitsMenu">
               <items>
                 <RadioMenuItem fx:id="miles" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Miles">
                      <toggleGroup>
