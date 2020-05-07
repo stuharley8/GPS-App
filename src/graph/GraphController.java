@@ -32,6 +32,16 @@ public class GraphController {
 
     public AnchorPane container;
     public Menu tracksMenu;
+
+    @FXML
+    RadioMenuItem dVT;
+    @FXML
+    RadioMenuItem eVT;
+    @FXML
+    RadioMenuItem eGVT;
+
+
+    private GraphHandler graphHandler;
     List<Track> tracks;
     List<Track> selectedTracks;
 
@@ -43,16 +53,25 @@ public class GraphController {
     RadioMenuItem miles;
     @FXML
     RadioMenuItem kilometers;
-
-    private static final int EARTH_RADIUS_METERS = 6371000;
-    private static final double KM_TO_MILES = 0.621371;
-
+    @FXML
+    Menu unitsMenu;
 
     @FXML
     public void drawAllSelectedTracks(){
-        chart.getData().clear();
-        for (Track track : this.selectedTracks) {
-            drawGraph(track.getName());
+        graphHandler = new GraphHandler(chart, selectedTracks,miles.isSelected());
+        if(dVT.isSelected()){
+            graphHandler.drawAllDistanceGraphs();
+            yAxis.setLabel("Distance (km/mi)");
+            unitsMenu.setDisable(false);
+        }else if(eVT.isSelected()){
+            graphHandler.drawAllElevationGraphs();
+            yAxis.setLabel("Elevation (m)");
+            unitsMenu.setDisable(true);
+
+        }else if(eGVT.isSelected()){
+            graphHandler.drawAllElevationGainGraphs();
+            yAxis.setLabel("Elevation Gain (m)");
+            unitsMenu.setDisable(true);
         }
 
     }
@@ -70,10 +89,6 @@ public class GraphController {
 
             }
         }
-
-        //draw all loaded tracks initially
-        drawAllGraphs();
-
         for(Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
             item.setOnAction(new EventHandler<ActionEvent>() {
@@ -86,9 +101,12 @@ public class GraphController {
 
         }
         selectedTracks = new ArrayList<>(this.tracks);
+        graphHandler = new GraphHandler(chart, selectedTracks, miles.isSelected());
+        graphHandler.drawAllDistanceGraphs();
 
 
     }
+
 
     public void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
@@ -101,79 +119,14 @@ public class GraphController {
         }
         if (i.isSelected()) {
             selectedTracks.add(track);
+            graphHandler.setSelectedTracks(selectedTracks);
 
         } else {
 
             selectedTracks.remove(track);
+            graphHandler.setSelectedTracks(selectedTracks);
 
         }
-        chart.getData().clear();
         drawAllSelectedTracks();
     }
-
-
-    private void drawAllGraphs(){
-        chart.getData().clear();
-        for (Track track : this.tracks) {
-            drawGraph(track.getName());
-        }
-    }
-
-    private void drawGraph(String name){
-        Track track = null;
-        for (Track t:tracks
-             ) {
-            if (t.getName().equals(name)){
-                track = t;
-            }
-        }
-        double distance = 0;
-        double time = 0;
-        boolean isMiles = false;
-        String unit = "km";
-        XYChart.Series points = new XYChart.Series();
-        if(miles.isSelected()){
-            isMiles = true;
-            unit = "mi";
-        }
-
-        List<Point> pointList = track.getPoints();
-        distance = drawPoints(pointList, points, distance, time, isMiles);
-        String rounded = String.format("%.3f", distance);
-        points.setName(track.getName() + " Total Distance: " + rounded + " " + unit);
-        chart.getData().add(points);
-    }
-
-    private double drawPoints(List<Point> pointList,  XYChart.Series points, double distance, double time, boolean isMiles){
-        for (int i = 0; i < pointList.size()-1; i++){
-            if(isMiles){
-                distance += KM_TO_MILES*calculateDistance(pointList.get(i), pointList.get(i+1));
-            }else{
-                distance += calculateDistance(pointList.get(i), pointList.get(i+1));
-            }
-
-            time += calculateTime(pointList.get(i), pointList.get(i+1));
-            points.getData().add(new XYChart.Data(time, distance));
-        }
-        return distance;
-    }
-
-
-    private double calculateDistance(Point pointA, Point pointB){
-        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
-                * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
-                * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
-        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
-                * (Math.toRadians(pointB.getLatitude()) - Math.toRadians(pointA.getLatitude()));
-        double deltaZ = pointB.getElevation() - pointA.getElevation();
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000;
-    }
-
-    private double calculateTime(Point pointA, Point pointB){
-        long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
-        double seconds = totalTime / 1000.0;
-        double minutes = seconds / 60;
-        return minutes;
-    }
-
 }
