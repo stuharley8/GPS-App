@@ -2,20 +2,17 @@
  * Course: SE2800-031
  * Spring 2020
  * Lab: GPS
- * Author: Noah Ernst
+ * Author: Noah Ernst, Stuart Harley
  * Created: 4/15/2020
  */
 
 package graph;
 
 import gps.Track;
-import gps.Point;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
@@ -39,6 +36,8 @@ public class GraphController {
     RadioMenuItem eVT;
     @FXML
     RadioMenuItem eGVT;
+    @FXML
+    RadioMenuItem cVT;
 
 
     private GraphHandler graphHandler;
@@ -56,46 +55,54 @@ public class GraphController {
     @FXML
     Menu unitsMenu;
 
+    /**
+     * Draws the selected tracks
+     */
     @FXML
-    public void drawAllSelectedTracks(){
-        graphHandler = new GraphHandler(chart, selectedTracks,miles.isSelected());
-        if(dVT.isSelected()){
+    public void drawAllSelectedTracks() {
+        graphHandler = new GraphHandler(chart, selectedTracks, miles.isSelected());
+        if (dVT.isSelected()) {
             graphHandler.drawAllDistanceGraphs();
             yAxis.setLabel("Distance (km/mi)");
             unitsMenu.setDisable(false);
-        }else if(eVT.isSelected()){
+        } else if (eVT.isSelected()) {
             graphHandler.drawAllElevationGraphs();
             yAxis.setLabel("Elevation (m)");
             unitsMenu.setDisable(true);
 
-        }else if(eGVT.isSelected()){
+        } else if (eGVT.isSelected()) {
             graphHandler.drawAllElevationGainGraphs();
             yAxis.setLabel("Elevation Gain (m)");
+            unitsMenu.setDisable(true);
+        } else if (cVT.isSelected()) {
+            graphHandler.drawAllCaloriesGraphs();
+            yAxis.setLabel("Calories Expended (cal)");
             unitsMenu.setDisable(true);
         }
 
     }
 
+    /**
+     * Sets the tracks that are loaded in to selectable menu items. Draws the first distance graph.
+     * @param tracks the tracks
+     */
     public void setTracks(List<Track> tracks) {
         //ignores track if less than 2 points
         this.tracks = new ArrayList<>();
         for (Track track : tracks) {
             if (track.getNumPoints() > 1) {
                 this.tracks.add(track);
-            }else{
-                Alert alert = new Alert(Alert.AlertType.ERROR, track.getName()+" has less than 2 points");
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        track.getName() + " has less than 2 points");
                 alert.setHeaderText("Invalid amount of track points");
                 alert.showAndWait();
 
             }
         }
-        for(Track track : this.tracks) {
+        for (Track track : this.tracks) {
             CheckMenuItem item = new CheckMenuItem(track.getName());
-            item.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent e) {
-                    addRemoveTrack(e);
-                }
-            });
+            item.setOnAction(this::addRemoveTrack);
             item.setSelected(true);
             tracksMenu.getItems().add(item);
 
@@ -103,30 +110,27 @@ public class GraphController {
         selectedTracks = new ArrayList<>(this.tracks);
         graphHandler = new GraphHandler(chart, selectedTracks, miles.isSelected());
         graphHandler.drawAllDistanceGraphs();
-
-
     }
 
 
+    /**
+     * Handles adding or removing a track to the graph on selection from the user
+     * @param e the action event of selecting the track menu item
+     */
     public void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
         Track track = null;
-        for (Track t:tracks
-        ) {
-            if (t.getName().equals(i.getText())){
+        for(Track t : tracks) {
+            if (t.getName().equals(i.getText())) {
                 track = t;
             }
         }
-        if (i.isSelected()) {
+        if(i.isSelected()) {
             selectedTracks.add(track);
-            graphHandler.setSelectedTracks(selectedTracks);
-
         } else {
-
             selectedTracks.remove(track);
-            graphHandler.setSelectedTracks(selectedTracks);
-
         }
+        graphHandler.setSelectedTracks(selectedTracks);
         drawAllSelectedTracks();
     }
 }

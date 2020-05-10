@@ -30,6 +30,7 @@ public class Track {
 
     private static final int EARTH_RADIUS_METERS = 6371000;
     private static final double KM_TO_MILES = 0.621371;
+    private static final double CAL_1_KPH_1_HR = 66.66666666666666666;
 
     private String name;
     private List<Point> points;
@@ -90,7 +91,7 @@ public class Track {
      * @param pointB Second point values used to calculate the time difference
      * @return The time difference between pointA and pointB in hours
      */
-    private double timeCalc(Point pointA, Point pointB) {
+    public static double timeCalc(Point pointA, Point pointB) {
         long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
         double seconds = totalTime / 1000.0;
         double minutes = seconds / 60;
@@ -121,7 +122,7 @@ public class Track {
      * @param pointB second point values used to calculate the grade
      * @return the grade value between pointA and PointB in percent
      */
-    public double gradeCalc(Point pointA, Point pointB) {
+    public static double gradeCalc(Point pointA, Point pointB) {
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
                 * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
                 * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
@@ -129,6 +130,29 @@ public class Track {
                 * (Math.toRadians(pointB.getLatitude()) - Math.toRadians(pointA.getLatitude()));
         double deltaZ = pointB.getElevation() - pointA.getElevation();
         return deltaZ/Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) * 100;
+    }
+
+    /**
+     * Calculates the amount of calories required to get between two points
+     * 15KPH for 1 hr = 1000 calories
+     * Therefore 1 kph per hour for 1 hr = 200/3 calories
+     * Every meter of elevation gain = 2 calories
+     *
+     * @param pointA the first point
+     * @param pointB the second point
+     * @return the amount of calories required
+     */
+    public static int calorieCount(Point pointA, Point pointB) {
+        double elevationChange = 0;
+        if(pointB.getElevation() > pointA.getElevation()) {
+            elevationChange = pointB.getElevation() - pointA.getElevation();
+        }
+        double kilometers = distanceCalc(pointA, pointB);
+        double hours = timeCalc(pointA, pointB);
+        double kph = kilometers/hours;
+        double calories = CAL_1_KPH_1_HR * kph * hours;
+        calories += elevationChange * 2;
+        return (int)calories;
     }
 
     /**
