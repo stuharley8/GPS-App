@@ -121,7 +121,7 @@ public class Track {
      * @param pointB second point values used to calculate the grade
      * @return the grade value between pointA and PointB in percent
      */
-    public double gradeCalc(Point pointA, Point pointB) {
+    public static double gradeCalc(Point pointA, Point pointB) {
         double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
                 * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
                 * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);

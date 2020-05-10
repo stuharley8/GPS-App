@@ -13,13 +13,19 @@ import gps.Track;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Menu;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -61,6 +67,10 @@ public class PlotterController {
     private PlotterTable table;
 
     private HashMap<Integer, Color> colors = new HashMap<>();
+
+    private String functionName = PlotterUtilities.defaultFunction;
+    private double speedInput = 0;
+    private Stage stage;
 
     public void setTracks(List<Track> tracks) {
         colors.put(0, Color.RED);
@@ -136,6 +146,7 @@ public class PlotterController {
         double intervalToMiles = (double) roundedInterval * 0.621371192;
         while (labelLineDistance > 400) {
             roundedInterval /= 2;
+            intervalToMiles /= 2;
             labelLineDistance /= 2;
         }
 
@@ -150,6 +161,10 @@ public class PlotterController {
         mapArea.getChildren().add(canvasLayer);
     }
 
+    /**
+     * calculates maximum x and y distance in kms over all tracks
+     * @return distance x and y in double []
+     */
     private double[] getDistance() {
         double minLat = Double.MAX_VALUE;
         double maxLat = -Double.MAX_VALUE;
@@ -246,25 +261,49 @@ public class PlotterController {
 
         GraphicsContext gc = track.getGraphicsContext2D();
         gc.clearRect(0, 0, track.getWidth(), track.getHeight());
-        Color color = colors.get(getIndexOfTrack(track));
-        table.setTrackColor(track.getName(), color);
+
+        Color color = getColor(track);
 
         gc.setFill(color);
         gc.setStroke(color);
         gc.setLineWidth(2);
         double prevX = xOffset + trackOriginX;
         double prevY = yOffset + trackOriginY;
+        int index = 0;
 
         for (double[] xy : track.getTrackXYFromOffset()) {
             double x = scaleX(xy[0]);
             double y = scaleY(xy[1], originY);
+            gc.setStroke(track.getColor(functionName, index));
             gc.strokeLine(prevX, prevY, xOffset + x, yOffset + y);
             prevX = xOffset + x;
             prevY = yOffset + y;
+            ++index;
         }
         mapArea.getChildren().add(track);
     }
 
+    /**
+     * A track's table and default color
+     * @param track track to get color from
+     * @return Color to draw table and default color of track
+     */
+    private Color getColor(CanvasLayer track) {
+        Color color;
+        if (functionName.equals(PlotterUtilities.gradeFunction)) {
+            color = Color.BLACK;
+        } else if (functionName.equals(PlotterUtilities.speedFunction)) {
+            color = Color.BLACK;
+        } else {
+            color = colors.get(getIndexOfTrack(track));
+        }
+        table.setTrackColor(track.getName(), color);
+        return color;
+    }
+
+    /**
+     * Draw origin axis on map from origin of first loaded track
+     */
     private void drawOriginAxis() {
         //offsets for centering
         double lowY = scaleY(minYBound, originY);
@@ -383,5 +422,72 @@ public class PlotterController {
             ++index;
         }
         return -1;
+    }
+
+    /**
+     * Sets function by user selection
+     * @param actionEvent
+     */
+    public void setFunction(ActionEvent actionEvent) {
+        String source = actionEvent.getSource().toString();
+        int i = source.indexOf("id=");
+        int j = source.indexOf(",", i);
+        functionName = source.substring(i+3, j);
+
+        performFunctionActions();
+    }
+
+    /**
+     * Perform set of operations based on which
+     * function was pressed
+     */
+    private void performFunctionActions() {
+        if (functionName.equals(PlotterUtilities.speedFunction)) {
+            Scene original = stage.getScene();
+
+            GridPane grid = new GridPane();
+            grid.setAlignment(Pos.CENTER);
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(25, 25, 25, 25));
+
+            Scene scene = new Scene(grid, 300, 275);
+            stage.setScene(scene);
+
+            Text scenetitle = new Text("Enter speed input");
+            grid.add(scenetitle, 0, 0, 2, 1);
+
+            Label userName = new Label("Enter speed:");
+            grid.add(userName, 0, 1);
+
+            TextField userTextField = new TextField();
+            grid.add(userTextField, 1, 1);
+
+            Button btn = new Button("Submit");
+            HBox hbBtn = new HBox(10);
+            hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+            hbBtn.getChildren().add(btn);
+            grid.add(hbBtn, 1, 4);
+
+            btn.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    //validate(userTextField.getText());
+                    speedInput = Double.parseDouble(userTextField.getText());
+                    stage.setScene(original);
+                    mapArea.getChildren().clear();
+                    redrawMap();
+                    mapArea.getChildren().add(table);
+                }
+            });
+        } else {
+            mapArea.getChildren().clear();
+            redrawMap();
+            mapArea.getChildren().add(table);
+        }
+    }
+
+    public void setStage(Stage plotter) {
+        this.stage = plotter;
     }
 }
