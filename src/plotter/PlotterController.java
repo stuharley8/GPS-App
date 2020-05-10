@@ -65,6 +65,7 @@ public class PlotterController {
     private double xOffset;
 
     private PlotterTable table;
+    private GradeTable gradeTable;
 
     private HashMap<Integer, Color> colors = new HashMap<>();
 
@@ -99,6 +100,7 @@ public class PlotterController {
         }
 
         table = new PlotterTable(this.tracks);
+        gradeTable = new GradeTable();
 
         convertTracks();
 
@@ -290,9 +292,9 @@ public class PlotterController {
      */
     private Color getColor(CanvasLayer track) {
         Color color;
-        if (functionName.equals(PlotterUtilities.gradeFunction)) {
+        if (functionName.equals(PlotterUtilities.speedFunction)) {
             color = Color.BLACK;
-        } else if (functionName.equals(PlotterUtilities.speedFunction)) {
+        } else if (functionName.equals(PlotterUtilities.gradeFunction)) {
             color = Color.BLACK;
         } else {
             color = colors.get(getIndexOfTrack(track));
@@ -377,15 +379,16 @@ public class PlotterController {
 
     private void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
-        mapArea.getChildren().clear();
+//        mapArea.getChildren().clear();
         if (i.isSelected()) {
             getTrackInTracks(i.getText()).setSelected(true);
         } else {
             getTrackInTracks(i.getText()).setSelected(false);
         }
-        redrawMap();
+//        redrawMap();
         redrawTable(i.getText(), i.isSelected());
-        mapArea.getChildren().add(table);
+        performFunctionActions();
+//        mapArea.getChildren().add(table);
     }
 
     private void redrawMap() {
@@ -480,6 +483,12 @@ public class PlotterController {
                     mapArea.getChildren().add(table);
                 }
             });
+        } else if (functionName.equals(PlotterUtilities.gradeFunction)) {
+            mapArea.getChildren().clear();
+
+            redrawMap();
+            mapArea.getChildren().add(table);
+            mapArea.getChildren().add(gradeTable);
         } else {
             mapArea.getChildren().clear();
             redrawMap();

@@ -15,7 +15,7 @@ public class PlotterUtilities {
     static {
         HashMap<Integer, Color> map = new HashMap<>();
         map.put(0, Color.DARKBLUE);
-        map.put(1, Color.LIGHTBLUE);
+        map.put(1, Color.CADETBLUE);
         map.put(2, Color.GREEN);
         map.put(3, Color.YELLOW);
         map.put(4, Color.ORANGE);
@@ -25,6 +25,9 @@ public class PlotterUtilities {
 
     public static Color getColor(int i) {
         return colors.get(i);
+    }
+    public static HashMap<Integer, Color> getColorMap(int i) {
+        return colors;
     }
 
 }
