@@ -245,7 +245,6 @@ public class Controller {
             plotter.setHeight(plotter.getWidth()  + 50);
         });
 
-
         //credit to Jason Winnebeck
         //http://gillius.org/blog/2013/02/javafx-window-scaling-on-resize.html
         double origW = 500;
@@ -289,7 +288,7 @@ public class Controller {
         }
 
         controller.setTracks(tracks);
-
+        controller.setStage(plotter);
         plotter.show();
     }
 
