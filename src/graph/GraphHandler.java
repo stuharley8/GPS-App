@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class GraphHandler {
 
-    private static final int EARTH_RADIUS_METERS = 6371000;
     private static final double KM_TO_MILES = 0.621371;
 
     private LineChart<Double, Double> chart;
@@ -47,7 +46,7 @@ public class GraphHandler {
     public void drawAllDistanceGraphs() {
         chart.getData().clear();
         for (Track track : this.selectedTracks) {
-            drawDistanceGraph(track.getName());
+            drawDistanceGraph(track);
         }
     }
 
@@ -57,7 +56,7 @@ public class GraphHandler {
     public void drawAllElevationGraphs() {
         chart.getData().clear();
         for (Track track : this.selectedTracks) {
-            drawElevationGraph(track.getName());
+            drawElevationGraph(track);
         }
     }
 
@@ -67,7 +66,7 @@ public class GraphHandler {
     public void drawAllElevationGainGraphs() {
         chart.getData().clear();
         for (Track track : this.selectedTracks) {
-            drawElevationGainGraph(track.getName());
+            drawElevationGainGraph(track);
         }
     }
 
@@ -77,7 +76,7 @@ public class GraphHandler {
     public void drawAllCaloriesGraphs() {
         chart.getData().clear();
         for(Track track : this.selectedTracks) {
-            drawCaloriesGraph(track.getName());
+            drawCaloriesGraph(track);
         }
     }
 
@@ -85,56 +84,53 @@ public class GraphHandler {
         this.selectedTracks = selectedTracks;
     }
 
-    private void drawCaloriesGraph(String name) {
-
-    }
-
-    private void drawElevationGraph(String name) {
-        Track track = null;
-        for (Track t : selectedTracks
-        ) {
-            if (t.getName().equals(name)) {
-                track = t;
-            }
-        }
+    private void drawCaloriesGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
-        List<Point> pointList = track.getPoints();
-        double gain = 0;
+        int calories = 0;
         double time = 0;
-        double initialTime = pointList.get(0).getDate().getTime();
-        double lastElevation = 0;
-        for (int i = 0; i < pointList.size(); i++) {
-            time += ((pointList.get(i).getDate().getTime() - initialTime) / 1000) / 60;
-            XYChart.Data point = new XYChart.Data(time, pointList.get(i).getElevation());
+        for (int i = 0; i < track.getNumPoints() - 1; i++) {
+            time += calculateTime(track.getPoint(i), track.getPoint(i + 1));
+            calories += Track.calorieCount(track.getPoint(i), track.getPoint(i + 1));
+            XYChart.Data point = new XYChart.Data(time, calories);
             Circle circle = new Circle(1.0);
             circle.setVisible(false);
             point.setNode(circle);
             points.getData().add(point);
-            if (pointList.get(i).getElevation() >= lastElevation) {
-                gain = +pointList.get(i).getElevation() - lastElevation;
+        }
+        points.setName(track.getName() + " Calories: " + calories + "cal");
+        chart.getData().add(points);
+    }
+
+    private void drawElevationGraph(Track track) {
+        XYChart.Series points = new XYChart.Series();
+        double gain = 0;
+        double time = 0;
+        double initialTime = track.getPoint(0).getDate().getTime();
+        double lastElevation = 0;
+        for (int i = 0; i < track.getNumPoints(); i++) {
+            time += ((track.getPoint(i).getDate().getTime() - initialTime) / 1000) / 60;
+            XYChart.Data point = new XYChart.Data(time, track.getPoint(i).getElevation());
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
+            if (track.getPoint(i).getElevation() >= lastElevation) {
+                gain = +track.getPoint(i).getElevation() - lastElevation;
             }
-            lastElevation = pointList.get(i).getElevation();
+            lastElevation = track.getPoint(i).getElevation();
         }
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
         chart.getData().add(points);
     }
 
-    private void drawElevationGainGraph(String name) {
-        Track track = null;
-        for (Track t : selectedTracks
-        ) {
-            if (t.getName().equals(name)) {
-                track = t;
-            }
-        }
+    private void drawElevationGainGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
-        List<Point> pointList = track.getPoints();
         double gain = 0;
         double time = 0;
-        for (int i = 0; i < pointList.size() - 1; i++) {
-            time += calculateTime(pointList.get(i), pointList.get(i + 1));
-            gain += calculateElevationGain(pointList.get(i), pointList.get(i + 1));
+        for (int i = 0; i < track.getNumPoints() - 1; i++) {
+            time += calculateTime(track.getPoint(i), track.getPoint(i + 1));
+            gain += calculateElevationGain(track.getPoint(i), track.getPoint(i + 1));
             XYChart.Data point = new XYChart.Data(time, gain);
             Circle circle = new Circle(1.0);
             circle.setVisible(false);
@@ -147,14 +143,7 @@ public class GraphHandler {
 
     }
 
-    private void drawDistanceGraph(String name) {
-        Track track = null;
-        for (Track t : selectedTracks
-        ) {
-            if (t.getName().equals(name)) {
-                track = t;
-            }
-        }
+    private void drawDistanceGraph(Track track) {
         double distance = 0;
         double time = 0;
         String unit = "km";
@@ -162,23 +151,21 @@ public class GraphHandler {
         if (isMiles) {
             unit = "mi";
         }
-
-        List<Point> pointList = track.getPoints();
-        distance = drawDistancePoints(pointList, points, distance, time, isMiles);
+        distance = drawDistancePoints(track, points, distance, time, isMiles);
         String rounded = String.format("%.3f", distance);
         points.setName(track.getName() + " Total Distance: " + rounded + " " + unit);
         chart.getData().add(points);
     }
 
-    private double drawDistancePoints(List<Point> pointList, XYChart.Series points, double distance, double time, boolean isMiles) {
-        for (int i = 0; i < pointList.size() - 1; i++) {
+    private double drawDistancePoints(Track track, XYChart.Series points, double distance, double time, boolean isMiles) {
+        for (int i = 0; i < track.getNumPoints() - 1; i++) {
             if (isMiles) {
-                distance += KM_TO_MILES * calculateDistance(pointList.get(i), pointList.get(i + 1));
+                distance += KM_TO_MILES * Track.distanceCalc(track.getPoint(i), track.getPoint(i + 1));
             } else {
-                distance += calculateDistance(pointList.get(i), pointList.get(i + 1));
+                distance += Track.distanceCalc(track.getPoint(i), track.getPoint(i + 1));
             }
 
-            time += calculateTime(pointList.get(i), pointList.get(i + 1));
+            time += calculateTime(track.getPoint(i), track.getPoint(i + 1));
             XYChart.Data point = new XYChart.Data(time, distance);
             Circle circle = new Circle(1.0);
             circle.setVisible(false);
@@ -186,17 +173,6 @@ public class GraphHandler {
             points.getData().add(point);
         }
         return distance;
-    }
-
-
-    private double calculateDistance(Point pointA, Point pointB) {
-        double deltaX = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
-                * (Math.toRadians(Math.abs(pointB.getLongitude())) - Math.toRadians(Math.abs(pointA.getLongitude())))
-                * Math.cos((Math.toRadians(Math.abs(pointB.getLatitude())) + Math.toRadians(Math.abs(pointA.getLatitude()))) / 2);
-        double deltaY = (EARTH_RADIUS_METERS + (pointB.getElevation() + pointA.getElevation()) / 2)
-                * (Math.toRadians(pointB.getLatitude()) - Math.toRadians(pointA.getLatitude()));
-        double deltaZ = pointB.getElevation() - pointA.getElevation();
-        return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)) / 1000;
     }
 
     private double calculateTime(Point pointA, Point pointB) {

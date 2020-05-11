@@ -10,7 +10,7 @@
            <ToggleGroup fx:id="units" />
            <ToggleGroup fx:id="data" />
        </fx:define>
-      <LineChart fx:id="chart" layoutY="27.0" legendVisible="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="932.0" style="">
+      <LineChart fx:id="chart" layoutY="27.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="932.0">
         <xAxis>
           <NumberAxis label="Time(min)" side="BOTTOM" fx:id="xAxis" />
         </xAxis>

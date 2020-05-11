@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +23,15 @@ import java.util.List;
  */
 public class GraphController {
 
+    private GraphHandler graphHandler;
+    List<Track> tracks;
+    List<Track> selectedTracks;
+
     @FXML
     LineChart<Double, Double> chart;
 
-    public AnchorPane container;
-    public Menu tracksMenu;
+    @FXML
+    private Menu tracksMenu;
 
     @FXML
     RadioMenuItem dVT;
@@ -38,11 +41,6 @@ public class GraphController {
     RadioMenuItem eGVT;
     @FXML
     RadioMenuItem cVT;
-
-
-    private GraphHandler graphHandler;
-    List<Track> tracks;
-    List<Track> selectedTracks;
 
     @FXML
     NumberAxis xAxis = new NumberAxis();
