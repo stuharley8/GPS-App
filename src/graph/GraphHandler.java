@@ -2,6 +2,7 @@ package graph;
 
 import gps.Point;
 import gps.Track;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -67,13 +68,19 @@ public class GraphHandler {
         double gain = 0;
         double time = 0;
         double initialTime = pointList.get(0).getDate().getTime();
-        double lastElevation = 0;
-        for(int i = 0; i < pointList.size(); i++){
+        double lastElevation = pointList.get(0).getElevation();
+        XYChart.Data initialPoint  = new XYChart.Data(time, lastElevation);
+        Circle circle = new Circle(1.0);
+        circle.setVisible(false);
+        initialPoint.setNode(circle);
+        points.getData().add(initialPoint);
+        for(int i = 1; i < pointList.size(); i++){
             time += ((pointList.get(i).getDate().getTime()- initialTime)/1000) / 60;
+            initialTime = pointList.get(i).getDate().getTime();
             XYChart.Data point  = new XYChart.Data(time, pointList.get(i).getElevation());
-            Circle circle = new Circle(1.0);
+            Circle circle2 = new Circle(1.0);
             circle.setVisible(false);
-            point.setNode(circle);
+            point.setNode(circle2);
             points.getData().add(point);
             if(pointList.get(i).getElevation() >= lastElevation){
                 gain =+ pointList.get(i).getElevation() - lastElevation ;
@@ -83,6 +90,7 @@ public class GraphHandler {
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
         chart.getData().add(points);
+                //.add(points);
     }
 
     private void drawElevationGainGraph(String name){
