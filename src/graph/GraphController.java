@@ -41,6 +41,8 @@ public class GraphController {
     RadioMenuItem eGVT;
     @FXML
     RadioMenuItem cVT;
+    @FXML
+    RadioMenuItem sVT;
 
     @FXML
     NumberAxis xAxis = new NumberAxis();
@@ -54,7 +56,7 @@ public class GraphController {
     Menu unitsMenu;
 
     /**
-     * Draws the selected tracks
+     * Draws all tracks to the LineChart
      */
     @FXML
     public void drawAllSelectedTracks() {
@@ -67,7 +69,6 @@ public class GraphController {
             graphHandler.drawAllElevationGraphs();
             yAxis.setLabel("Elevation (m)");
             unitsMenu.setDisable(true);
-
         } else if (eGVT.isSelected()) {
             graphHandler.drawAllElevationGainGraphs();
             yAxis.setLabel("Elevation Gain (m)");
@@ -75,6 +76,10 @@ public class GraphController {
         } else if (cVT.isSelected()) {
             graphHandler.drawAllCaloriesGraphs();
             yAxis.setLabel("Calories Expended (cal)");
+            unitsMenu.setDisable(true);
+        } else if(sVT.isSelected()) {
+            graphHandler.drawAllSpeedGraphs();
+            yAxis.setLabel("Speed (km/hr)");
             unitsMenu.setDisable(true);
         }
 

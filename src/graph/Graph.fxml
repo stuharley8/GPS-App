@@ -23,12 +23,10 @@
             <Menu fx:id="tracksMenu" mnemonicParsing="false" text="Tracks" />
           <Menu mnemonicParsing="false" text="Data">
             <items>
-                  <RadioMenuItem fx:id="dVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" selected="true" text="Distance vs Time">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="data" />
-                     </toggleGroup></RadioMenuItem>
-                  <RadioMenuItem fx:id="eVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Elevation vs Time" toggleGroup="$data" />
-                  <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Elevation Gain vs Time" toggleGroup="$data" />
+                  <RadioMenuItem fx:id="dVT" selected="true" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="eVT" mnemonicParsing="false" text="Elevation vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" text="Elevation Gain vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="sVT" mnemonicParsing="false" text="Speed vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
                   <RadioMenuItem fx:id="cVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Calories vs Time" toggleGroup="$data" />
             </items>
           </Menu>

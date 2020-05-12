@@ -27,12 +27,12 @@ public class GraphHandler {
     private boolean isMiles;
     List<Track> selectedTracks;
 
-
     /**
-     * Constructor
-     * @param chart the chart to draw on
-     * @param selectedTracks the tracks to draw
-     * @param isMiles whether the distance is in miles or kilometers
+     * Constructs the graph handler
+     *
+     * @param chart          LineChart being drawn
+     * @param selectedTracks list of tracks that are selected
+     * @param isMiles        if user switches metrics
      */
     public GraphHandler(LineChart<Double, Double> chart, List<Track> selectedTracks, boolean isMiles) {
         this.selectedTracks = selectedTracks;
@@ -75,17 +75,33 @@ public class GraphHandler {
      */
     public void drawAllCaloriesGraphs() {
         chart.getData().clear();
-        for(Track track : this.selectedTracks) {
+        for (Track track : this.selectedTracks) {
             drawCaloriesGraph(track);
         }
     }
 
+    /**
+     * Draws speed vs time graph
+     */
+    public void drawAllSpeedGraphs() {
+        chart.getData().clear();
+        for (Track track : this.selectedTracks) {
+            drawSpeedGraph(track);
+        }
+    }
+
+    /**
+     * Sets the tracks for the handler to choose from
+     *
+     * @param selectedTracks list of tracks that are selected on the gui
+     */
     public void setSelectedTracks(List<Track> selectedTracks) {
         this.selectedTracks = selectedTracks;
     }
 
     private void drawCaloriesGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
+        points.getData().add(new XYChart.Data(0, 0));
         int calories = 0;
         double time = 0;
         for (int i = 0; i < track.getNumPoints() - 1; i++) {
@@ -101,18 +117,49 @@ public class GraphHandler {
         chart.getData().add(points);
     }
 
+    private void drawSpeedGraph(Track track) {
+        XYChart.Series points = new XYChart.Series();
+        points.getData().add(new XYChart.Data(0, 0));
+        double time;
+        double totalTime = 0;
+        double distance;
+        double totalDistance = 0;
+        double speed;
+        for (int i = 0; i < track.getNumPoints() - 1; i++) {
+            time = calculateTime(track.getPoint(i), track.getPoint(i + 1));
+            totalTime += time;
+            distance = Track.distanceCalc(track.getPoint(i), track.getPoint(i + 1));
+            totalDistance += distance;
+            speed = distance / (time / 60);
+            XYChart.Data point = new XYChart.Data(totalTime, speed);
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
+        }
+        String rounded = String.format("%.3f", totalDistance);
+        points.setName(track.getName() + " Total Distance: " + rounded + " km");
+        chart.getData().add(points);
+    }
+
     private void drawElevationGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
         double gain = 0;
         double time = 0;
         double initialTime = track.getPoint(0).getDate().getTime();
-        double lastElevation = 0;
-        for (int i = 0; i < track.getNumPoints(); i++) {
+        double lastElevation = track.getPoint(0).getElevation();
+        XYChart.Data initialPoint = new XYChart.Data(time, lastElevation);
+        Circle circle = new Circle(1.0);
+        circle.setVisible(false);
+        initialPoint.setNode(circle);
+        points.getData().add(initialPoint);
+        for (int i = 1; i < track.getNumPoints(); i++) {
             time += ((track.getPoint(i).getDate().getTime() - initialTime) / 1000) / 60;
+            initialTime = track.getPoint(i).getDate().getTime();
             XYChart.Data point = new XYChart.Data(time, track.getPoint(i).getElevation());
-            Circle circle = new Circle(1.0);
-            circle.setVisible(false);
-            point.setNode(circle);
+            Circle circle2 = new Circle(1.0);
+            circle2.setVisible(false);
+            point.setNode(circle2);
             points.getData().add(point);
             if (track.getPoint(i).getElevation() >= lastElevation) {
                 gain = +track.getPoint(i).getElevation() - lastElevation;
@@ -126,6 +173,7 @@ public class GraphHandler {
 
     private void drawElevationGainGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
+        points.getData().add(new XYChart.Data(0, 0));
         double gain = 0;
         double time = 0;
         for (int i = 0; i < track.getNumPoints() - 1; i++) {
@@ -140,7 +188,6 @@ public class GraphHandler {
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
         chart.getData().add(points);
-
     }
 
     private void drawDistanceGraph(Track track) {
@@ -148,6 +195,7 @@ public class GraphHandler {
         double time = 0;
         String unit = "km";
         XYChart.Series points = new XYChart.Series();
+        points.getData().add(new XYChart.Data(0, 0));
         if (isMiles) {
             unit = "mi";
         }
@@ -164,7 +212,6 @@ public class GraphHandler {
             } else {
                 distance += Track.distanceCalc(track.getPoint(i), track.getPoint(i + 1));
             }
-
             time += calculateTime(track.getPoint(i), track.getPoint(i + 1));
             XYChart.Data point = new XYChart.Data(time, distance);
             Circle circle = new Circle(1.0);
@@ -189,6 +236,4 @@ public class GraphHandler {
         }
         return gain;
     }
-
-
 }

@@ -14,6 +14,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,6 +41,8 @@ public class CanvasLayer extends Canvas {
     private double originY;
     private boolean isSelected;
 
+    private ArrayList<Integer> gradeArray;// = new ArrayList<>();
+
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
         super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);
 
@@ -46,6 +50,7 @@ public class CanvasLayer extends Canvas {
         if (track == null) {
             this.name = "map element";
         } else {
+            gradeArray = new ArrayList<>();
             this.name = track.getName();
             minLatitude = track.getMinLatitude();
             maxLatitude = track.getMaxLatitude();
@@ -73,6 +78,7 @@ public class CanvasLayer extends Canvas {
 
         for (int i = 1; i < points.size(); ++i) {
             double array[] = deltaCoordinateConversion(points.get(i - 1), points.get(i), prevX, prevY);
+            insertGradeIntoArray(points.get(i - 1), points.get(i));
             xyCoordinatesFromOffset.add(array);
             prevX = array[0];
             prevY = array[1];
@@ -89,6 +95,24 @@ public class CanvasLayer extends Canvas {
             if (prevY > maxY) {
                 maxY = prevY;
             }
+        }
+    }
+
+
+    private void insertGradeIntoArray(Point a, Point b) {
+        double grade = Track.gradeCalc(a, b);
+        if (grade < -5) {
+            gradeArray.add(0);
+        } else if (grade >= -5 && grade < -1) {
+            gradeArray.add(1);
+        } else if (grade >= -1 && grade < 1) {
+            gradeArray.add(2);
+        } else if (grade >= 1 && grade < 3) {
+            gradeArray.add(3);
+        } else if (grade >= 3 && grade < 5) {
+            gradeArray.add(4);
+        } else {
+            gradeArray.add(5);
         }
     }
 
@@ -161,10 +185,13 @@ public class CanvasLayer extends Canvas {
         return maxY;
     }
 
-    public boolean isSelected() { return isSelected;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public void setSelected(boolean selected) {this.isSelected = selected;}
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
+    }
 
     public double getMinLatitude() {
         return minLatitude;
@@ -186,7 +213,18 @@ public class CanvasLayer extends Canvas {
         return color;
     }
 
+    public Color getColor(String functionName, int index) {
+        if (functionName.equals(PlotterUtilities.gradeFunction)) {
+            return PlotterUtilities.getColor(gradeArray.get(index));
+        } else if (functionName.equals(PlotterUtilities.speedFunction)) {
+
+        }
+        return color;
+    }
+
     public void setColor(Color color) {
         this.color = color;
     }
+
+
 }
