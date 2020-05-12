@@ -147,8 +147,7 @@ public class GraphHandler {
         double gain = 0;
         double time = 0;
         double initialTime = track.getPoint(0).getDate().getTime();
-        double lastElevation = track.getPoint(0).getElevation();
-        XYChart.Data initialPoint = new XYChart.Data(time, lastElevation);
+        XYChart.Data initialPoint = new XYChart.Data(time, track.getPoint(0).getElevation());
         Circle circle = new Circle(1.0);
         circle.setVisible(false);
         initialPoint.setNode(circle);
@@ -161,10 +160,7 @@ public class GraphHandler {
             circle2.setVisible(false);
             point.setNode(circle2);
             points.getData().add(point);
-            if (track.getPoint(i).getElevation() >= lastElevation) {
-                gain = +track.getPoint(i).getElevation() - lastElevation;
-            }
-            lastElevation = track.getPoint(i).getElevation();
+            gain += calculateElevationGain(track.getPoint(i-1) , track.getPoint(i));
         }
         String rounded = String.format("%.3f", gain);
         points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
