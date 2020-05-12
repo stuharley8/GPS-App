@@ -30,7 +30,7 @@ public class Track {
 
     private static final int EARTH_RADIUS_METERS = 6371000;
     private static final double KM_TO_MILES = 0.621371;
-    private static final double CAL_1_KPH_1_HR = 66.66666666666666666;
+    private static final int KM_FOR_1000_CAL = 15;
 
     private String name;
     private List<Point> points;
@@ -135,7 +135,7 @@ public class Track {
     /**
      * Calculates the amount of calories required to get between two points
      * 15KPH for 1 hr = 1000 calories
-     * Therefore 1 kph per hour for 1 hr = 200/3 calories
+     * So 15km = 1000 calories
      * Every meter of elevation gain = 2 calories
      *
      * @param pointA the first point
@@ -148,9 +148,7 @@ public class Track {
             elevationChange = pointB.getElevation() - pointA.getElevation();
         }
         double kilometers = distanceCalc(pointA, pointB);
-        double hours = timeCalc(pointA, pointB);
-        double kph = kilometers/hours;
-        double calories = CAL_1_KPH_1_HR * kph * hours;
+        double calories = kilometers / KM_FOR_1000_CAL * 1000;
         calories += elevationChange * 2;
         return (int)calories;
     }
