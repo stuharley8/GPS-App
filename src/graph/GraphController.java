@@ -39,6 +39,9 @@ public class GraphController {
     RadioMenuItem eVT;
     @FXML
     RadioMenuItem eGVT;
+    @FXML
+    RadioMenuItem sVT;
+
 
 
     private GraphHandler graphHandler;
@@ -56,6 +59,9 @@ public class GraphController {
     @FXML
     Menu unitsMenu;
 
+    /**
+     * Draws all tracks to the LineChart
+     */
     @FXML
     public void drawAllSelectedTracks(){
         graphHandler = new GraphHandler(chart, selectedTracks,miles.isSelected());
@@ -71,6 +77,10 @@ public class GraphController {
         }else if(eGVT.isSelected()){
             graphHandler.drawAllElevationGainGraphs();
             yAxis.setLabel("Elevation Gain (m)");
+            unitsMenu.setDisable(true);
+        }else if(sVT.isSelected()){
+            graphHandler.drawAllSpeedGraphs();
+            yAxis.setLabel("Speed (km/hr)");
             unitsMenu.setDisable(true);
         }
 

@@ -30,6 +30,7 @@
                   <RadioMenuItem fx:id="dVT" selected="true" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" toggleGroup="$data"/>
                   <RadioMenuItem fx:id="eVT" mnemonicParsing="false" text="Elevation vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
                   <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" text="Elevation Gain vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="sVT" mnemonicParsing="false" text="Speed vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Units" fx:id="unitsMenu">
