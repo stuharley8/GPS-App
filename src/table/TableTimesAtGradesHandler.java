@@ -40,7 +40,7 @@ public class TableTimesAtGradesHandler {
             double seconds = totalTime / 1000.0;
             double minutes = seconds / 60;
             totalMin += minutes;
-            double grade = track.gradeCalc(track.getPoint(i), track.getPoint(i+1));
+            double grade = Track.gradeCalc(track.getPoint(i), track.getPoint(i+1));
             if(grade < -5) {
                 negFiveLessMin += minutes;
             } else if (grade < -1) {

@@ -43,7 +43,7 @@ public class TableSpeedsHandler {
             double minutes = seconds / 60;
             double hours = minutes / 60;
             totalMin += minutes;
-            double miles = track.distanceCalc(track.getPoint(i), track.getPoint(i+1)) * KM_TO_MILES;
+            double miles = Track.distanceCalc(track.getPoint(i), track.getPoint(i+1)) * KM_TO_MILES;
             double mph = miles/hours;
             if(mph < 3) {
                 threeLessMin += minutes;
