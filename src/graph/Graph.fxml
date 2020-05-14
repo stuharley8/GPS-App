@@ -12,10 +12,10 @@
        </fx:define>
       <LineChart fx:id="chart" layoutY="27.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="932.0">
         <xAxis>
-          <NumberAxis label="Time(min)" side="BOTTOM" fx:id="xAxis" />
+          <NumberAxis label="Time (min)" side="BOTTOM" fx:id="xAxis" />
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="yAxis" label="Distance (km/mi)" side="LEFT" />
+          <NumberAxis fx:id="yAxis" label="Distance (km)" side="LEFT" />
         </yAxis>
       </LineChart>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="932.0">
@@ -23,11 +23,15 @@
             <Menu fx:id="tracksMenu" mnemonicParsing="false" text="Tracks" />
           <Menu mnemonicParsing="false" text="Data">
             <items>
-                  <RadioMenuItem fx:id="dVT" selected="true" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Distance vs Time" toggleGroup="$data"/>
-                  <RadioMenuItem fx:id="eVT" mnemonicParsing="false" text="Elevation vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
-                  <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" text="Elevation Gain vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
-                  <RadioMenuItem fx:id="sVT" mnemonicParsing="false" text="Speed vs Time" onAction="#drawAllSelectedTracks" toggleGroup="$data"/>
+                  <RadioMenuItem fx:id="dVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" selected="true" text="Distance vs Time">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="data" />
+                     </toggleGroup></RadioMenuItem>
+                  <RadioMenuItem fx:id="eVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Elevation vs Time" toggleGroup="$data" />
+                  <RadioMenuItem fx:id="eGVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Elevation Gain vs Time" toggleGroup="$data" />
+                  <RadioMenuItem fx:id="sVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Speed vs Time" toggleGroup="$data" />
                   <RadioMenuItem fx:id="cVT" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Calories vs Time" toggleGroup="$data" />
+                  <RadioMenuItem fx:id="sVD" mnemonicParsing="false" onAction="#drawAllSelectedTracks" text="Speed vs Distance" toggleGroup="$data" />
             </items>
           </Menu>
           <Menu fx:id="unitsMenu" mnemonicParsing="false" text="Units">
