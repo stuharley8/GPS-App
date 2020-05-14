@@ -102,7 +102,7 @@ public class GraphHandler {
     private void drawCaloriesGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
         points.getData().add(new XYChart.Data(0, 0));
-        int calories = 0;
+        double calories = 0;
         double time = 0;
         for (int i = 0; i < track.getNumPoints() - 1; i++) {
             time += calculateTime(track.getPoint(i), track.getPoint(i + 1));
@@ -113,7 +113,7 @@ public class GraphHandler {
             point.setNode(circle);
             points.getData().add(point);
         }
-        points.setName(track.getName() + " Calories: " + calories + "cal");
+        points.setName(track.getName() + " Calories: " + String.format("%.2f", calories) + "cal");
         chart.getData().add(points);
     }
 

@@ -142,7 +142,7 @@ public class Track {
      * @param pointB the second point
      * @return the amount of calories required
      */
-    public static int calorieCount(Point pointA, Point pointB) {
+    public static double calorieCount(Point pointA, Point pointB) {
         double elevationChange = 0;
         if(pointB.getElevation() > pointA.getElevation()) {
             elevationChange = pointB.getElevation() - pointA.getElevation();
@@ -150,7 +150,7 @@ public class Track {
         double kilometers = distanceCalc(pointA, pointB);
         double calories = kilometers / KM_FOR_1000_CAL * 1000;
         calories += elevationChange * 2;
-        return (int)calories;
+        return calories;
     }
 
     /**
