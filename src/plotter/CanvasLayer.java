@@ -42,6 +42,7 @@ public class CanvasLayer extends Canvas {
     private boolean isSelected;
 
     private ArrayList<Integer> gradeArray;// = new ArrayList<>();
+    private ArrayList<Double> speedArray;// = new ArrayList<>();
 
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
         super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);
@@ -51,6 +52,7 @@ public class CanvasLayer extends Canvas {
             this.name = "map element";
         } else {
             gradeArray = new ArrayList<>();
+            speedArray = new ArrayList<>();
             this.name = track.getName();
             minLatitude = track.getMinLatitude();
             maxLatitude = track.getMaxLatitude();
@@ -79,6 +81,7 @@ public class CanvasLayer extends Canvas {
         for (int i = 1; i < points.size(); ++i) {
             double array[] = deltaCoordinateConversion(points.get(i - 1), points.get(i), prevX, prevY);
             insertGradeIntoArray(points.get(i - 1), points.get(i));
+
             xyCoordinatesFromOffset.add(array);
             prevX = array[0];
             prevY = array[1];
@@ -101,6 +104,11 @@ public class CanvasLayer extends Canvas {
 
     private void insertGradeIntoArray(Point a, Point b) {
         double grade = Track.gradeCalc(a, b);
+        double time = calculateTime(a, b);
+        double distance = Track.distanceCalc(a, b);
+        double speed = distance / (time / 60);
+        speedArray.add(speed);
+
         if (grade < -5) {
             gradeArray.add(0);
         } else if (grade >= -5 && grade < -1) {
@@ -209,21 +217,25 @@ public class CanvasLayer extends Canvas {
         return maxLongitude;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
     public Color getColor(String functionName, int index) {
         if (functionName.equals(PlotterUtilities.gradeFunction)) {
             return PlotterUtilities.getColor(gradeArray.get(index));
-        } else if (functionName.equals(PlotterUtilities.speedFunction)) {
-
         }
         return color;
     }
 
+    public double getSpeedAtIndex(int index) {
+        return speedArray.get(index);
+    }
+
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    private double calculateTime(Point pointA, Point pointB) {
+        long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
+        double seconds = totalTime / 1000.0;
+        return seconds / 60;
     }
 
 
