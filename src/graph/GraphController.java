@@ -43,6 +43,8 @@ public class GraphController {
     RadioMenuItem cVT;
     @FXML
     RadioMenuItem sVT;
+    @FXML
+    RadioMenuItem sVD;
 
     @FXML
     NumberAxis xAxis = new NumberAxis();
@@ -63,26 +65,43 @@ public class GraphController {
         graphHandler = new GraphHandler(chart, selectedTracks, miles.isSelected());
         if (dVT.isSelected()) {
             graphHandler.drawAllDistanceGraphs();
-            yAxis.setLabel("Distance (km/mi)");
+            xAxis.setLabel("Time (min)");
+            if(miles.isSelected()) {
+                yAxis.setLabel("Distance (mi)");
+            } else {
+                yAxis.setLabel("Distance (km)");
+            }
             unitsMenu.setDisable(false);
         } else if (eVT.isSelected()) {
             graphHandler.drawAllElevationGraphs();
+            xAxis.setLabel("Time (min)");
             yAxis.setLabel("Elevation (m)");
             unitsMenu.setDisable(true);
         } else if (eGVT.isSelected()) {
             graphHandler.drawAllElevationGainGraphs();
+            xAxis.setLabel("Time (min)");
             yAxis.setLabel("Elevation Gain (m)");
             unitsMenu.setDisable(true);
         } else if (cVT.isSelected()) {
             graphHandler.drawAllCaloriesGraphs();
+            xAxis.setLabel("Time (min)");
             yAxis.setLabel("Calories Expended (cal)");
             unitsMenu.setDisable(true);
         } else if(sVT.isSelected()) {
-            graphHandler.drawAllSpeedGraphs();
+            graphHandler.drawAllSpeedVsTimeGraphs();
+            xAxis.setLabel("Time (min)");
             yAxis.setLabel("Speed (km/hr)");
             unitsMenu.setDisable(true);
+        } else if(sVD.isSelected()) {
+            graphHandler.drawAllSpeedVsDistanceGraphs();
+            if(miles.isSelected()) {
+                xAxis.setLabel("Distance (mi)");
+            } else {
+                xAxis.setLabel("Distance (km)");
+            }
+            yAxis.setLabel("Speed (kph)");
+            unitsMenu.setDisable(false);
         }
-
     }
 
     /**

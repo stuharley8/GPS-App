@@ -83,10 +83,20 @@ public class GraphHandler {
     /**
      * Draws speed vs time graph
      */
-    public void drawAllSpeedGraphs() {
+    public void drawAllSpeedVsTimeGraphs() {
         chart.getData().clear();
         for (Track track : this.selectedTracks) {
-            drawSpeedGraph(track);
+            drawSpeedVsTimeGraph(track);
+        }
+    }
+
+    /**
+     * Draws all the speed vs distance graph lines for the selected tracks
+     */
+    public void drawAllSpeedVsDistanceGraphs() {
+        chart.getData().clear();
+        for (Track track : this.selectedTracks) {
+            drawSpeedVsDistanceGraph(track);
         }
     }
 
@@ -113,11 +123,11 @@ public class GraphHandler {
             point.setNode(circle);
             points.getData().add(point);
         }
-        points.setName(track.getName() + " Calories: " + String.format("%.2f", calories) + "cal");
+        points.setName(track.getName() + " - Calories: " + String.format("%.2f", calories) + "cal");
         chart.getData().add(points);
     }
 
-    private void drawSpeedGraph(Track track) {
+    private void drawSpeedVsTimeGraph(Track track) {
         XYChart.Series points = new XYChart.Series();
         points.getData().add(new XYChart.Data(0, 0));
         double time;
@@ -138,7 +148,7 @@ public class GraphHandler {
             points.getData().add(point);
         }
         String rounded = String.format("%.3f", totalDistance);
-        points.setName(track.getName() + " Total Distance: " + rounded + " km");
+        points.setName(track.getName() + " - Total Distance: " + rounded + " km");
         chart.getData().add(points);
     }
 
@@ -160,10 +170,10 @@ public class GraphHandler {
             circle2.setVisible(false);
             point.setNode(circle2);
             points.getData().add(point);
-            gain += calculateElevationGain(track.getPoint(i-1) , track.getPoint(i));
+            gain += calculateElevationGain(track.getPoint(i - 1), track.getPoint(i));
         }
         String rounded = String.format("%.3f", gain);
-        points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
+        points.setName(track.getName() + " - Elevation Gain: " + rounded + " m");
         chart.getData().add(points);
     }
 
@@ -182,7 +192,35 @@ public class GraphHandler {
             points.getData().add(point);
         }
         String rounded = String.format("%.3f", gain);
-        points.setName(track.getName() + " Elevation Gain: " + rounded + " m");
+        points.setName(track.getName() + " - Elevation Gain: " + rounded + " m");
+        chart.getData().add(points);
+    }
+
+    private void drawSpeedVsDistanceGraph(Track track) {
+        double totalDistance = 0;
+        double distance;
+        double speed;
+        double time;
+        String units = "km";
+        XYChart.Series points = new XYChart.Series();
+        points.getData().add(new XYChart.Data(0, 0));
+        for (int i = 0; i < track.getNumPoints() - 1; i++) {
+            distance = Track.distanceCalc(track.getPoint(i), track.getPoint(i + 1));
+            time = Track.timeCalc(track.getPoint(i), track.getPoint(i + 1));
+            speed = distance / time;
+            if (isMiles) {
+                distance *= KM_TO_MILES;
+                units = "mi";
+            }
+            totalDistance += distance;
+            XYChart.Data point = new XYChart.Data(totalDistance, speed);
+            Circle circle = new Circle(1.0);
+            circle.setVisible(false);
+            point.setNode(circle);
+            points.getData().add(point);
+        }
+        points.setName(track.getName() + " - Total Distance: "
+                + String.format("%.3f", totalDistance) + " " + units);
         chart.getData().add(points);
     }
 
@@ -197,7 +235,7 @@ public class GraphHandler {
         }
         distance = drawDistancePoints(track, points, distance, time, isMiles);
         String rounded = String.format("%.3f", distance);
-        points.setName(track.getName() + " Total Distance: " + rounded + " " + unit);
+        points.setName(track.getName() + " - Total Distance: " + rounded + " " + unit);
         chart.getData().add(points);
     }
 
