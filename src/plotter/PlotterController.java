@@ -66,6 +66,7 @@ public class PlotterController {
 
     private PlotterTable table;
     private GradeTable gradeTable;
+    private SpeedTable speedTable;
 
     private HashMap<Integer, Color> colors = new HashMap<>();
 
@@ -102,6 +103,7 @@ public class PlotterController {
 
         table = new PlotterTable(this.tracks);
         gradeTable = new GradeTable();
+        speedTable = new SpeedTable();
 
         convertTracks();
 
@@ -284,8 +286,6 @@ public class PlotterController {
             gc.setStroke(track.getColor(functionName, index));
             if (functionName.equals(PlotterUtilities.speedFunction)) {
                 if (track.getSpeedAtIndex(index) >= speedInput) {
-                    gc.setStroke(Color.RED);
-                } else {
                     gc.setStroke(Color.BLACK);
                 }
             }
@@ -305,12 +305,11 @@ public class PlotterController {
      */
     private Color getColor(CanvasLayer track) {
         Color color;
-        if (functionName.equals(PlotterUtilities.speedFunction)) {
-            color = Color.BLACK;
-        } else if (functionName.equals(PlotterUtilities.gradeFunction)) {
+        if (functionName.equals(PlotterUtilities.gradeFunction)) {
             color = Color.BLACK;
         } else {
             color = colors.get(getIndexOfTrack(track));
+            track.setColor(color);
         }
         table.setTrackColor(track.getName(), color);
         return color;
@@ -491,10 +490,12 @@ public class PlotterController {
                             alert.showAndWait();
                         } else {
                             speedInput = Double.parseDouble(input);
+                            speedTable.setSpeed(speedInput);
                             stage.setScene(original);
                             mapArea.getChildren().clear();
                             redrawMap();
                             mapArea.getChildren().add(table);
+                            mapArea.getChildren().add(speedTable);
                         }
                     }
                 }
@@ -517,10 +518,12 @@ public class PlotterController {
                         alert.showAndWait();
                     } else {
                         speedInput = Double.parseDouble(input);
+                        speedTable.setSpeed(speedInput);
                         stage.setScene(original);
                         mapArea.getChildren().clear();
                         redrawMap();
                         mapArea.getChildren().add(table);
+                        mapArea.getChildren().add(speedTable);
                     }
                 }
             });
