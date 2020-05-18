@@ -16,9 +16,9 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Plot Function">
                <items>
-                  <MenuItem fx:id="default" mnemonicParsing="false" text="Color each track separately" onAction="#setFunction" />
-                  <MenuItem fx:id="grade" mnemonicParsing="false" text="Color by grade" onAction="#setFunction" />
-                  <MenuItem fx:id="speed" mnemonicParsing="false" text="Speed Not implemented"/>
+                  <MenuItem fx:id="default" mnemonicParsing="false" text="Color Each Track Separately" onAction="#setFunction" />
+                  <MenuItem fx:id="grade" mnemonicParsing="false" text="Color Track Intervals By Grade" onAction="#setFunction" />
+                  <MenuItem fx:id="speed" mnemonicParsing="false" text="Color Track Intervals Exceeding Given Speed"  onAction="#setFunction"/>
                </items>
           </Menu>
         </menus>

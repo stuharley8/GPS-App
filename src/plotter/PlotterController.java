@@ -10,15 +10,15 @@ package plotter;
 
 import gps.Point;
 import gps.Track;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -66,10 +66,12 @@ public class PlotterController {
 
     private PlotterTable table;
     private GradeTable gradeTable;
+    private SpeedTable speedTable;
 
     private HashMap<Integer, Color> colors = new HashMap<>();
 
     private String functionName = PlotterUtilities.defaultFunction;
+    private String previousFunctionName = "";
     private double speedInput = 0;
     private Stage stage;
 
@@ -101,6 +103,7 @@ public class PlotterController {
 
         table = new PlotterTable(this.tracks);
         gradeTable = new GradeTable();
+        speedTable = new SpeedTable();
 
         convertTracks();
 
@@ -165,6 +168,7 @@ public class PlotterController {
 
     /**
      * calculates maximum x and y distance in kms over all tracks
+     *
      * @return distance x and y in double []
      */
     private double[] getDistance() {
@@ -219,6 +223,9 @@ public class PlotterController {
         }
     }
 
+    /**
+     * Sets max bounds for latitude and longitude for loaded tracks
+     */
     private void getBounds() {
         for (CanvasLayer track : canvasTracks) {
             if (track.isSelected()) {
@@ -277,6 +284,11 @@ public class PlotterController {
             double x = scaleX(xy[0]);
             double y = scaleY(xy[1], originY);
             gc.setStroke(track.getColor(functionName, index));
+            if (functionName.equals(PlotterUtilities.speedFunction)) {
+                if (track.getSpeedAtIndex(index) >= speedInput) {
+                    gc.setStroke(Color.BLACK);
+                }
+            }
             gc.strokeLine(prevX, prevY, xOffset + x, yOffset + y);
             prevX = xOffset + x;
             prevY = yOffset + y;
@@ -287,17 +299,17 @@ public class PlotterController {
 
     /**
      * A track's table and default color
+     *
      * @param track track to get color from
      * @return Color to draw table and default color of track
      */
     private Color getColor(CanvasLayer track) {
         Color color;
-        if (functionName.equals(PlotterUtilities.speedFunction)) {
-            color = Color.BLACK;
-        } else if (functionName.equals(PlotterUtilities.gradeFunction)) {
+        if (functionName.equals(PlotterUtilities.gradeFunction)) {
             color = Color.BLACK;
         } else {
             color = colors.get(getIndexOfTrack(track));
+            track.setColor(color);
         }
         table.setTrackColor(track.getName(), color);
         return color;
@@ -379,16 +391,13 @@ public class PlotterController {
 
     private void addRemoveTrack(ActionEvent e) {
         CheckMenuItem i = (CheckMenuItem) e.getSource();
-//        mapArea.getChildren().clear();
         if (i.isSelected()) {
             getTrackInTracks(i.getText()).setSelected(true);
         } else {
             getTrackInTracks(i.getText()).setSelected(false);
         }
-//        redrawMap();
         redrawTable(i.getText(), i.isSelected());
         performFunctionActions();
-//        mapArea.getChildren().add(table);
     }
 
     private void redrawMap() {
@@ -429,13 +438,19 @@ public class PlotterController {
 
     /**
      * Sets function by user selection
+     *
      * @param actionEvent
      */
     public void setFunction(ActionEvent actionEvent) {
+        previousFunctionName = functionName;
+
         String source = actionEvent.getSource().toString();
         int i = source.indexOf("id=");
         int j = source.indexOf(",", i);
-        functionName = source.substring(i+3, j);
+        functionName = source.substring(i + 3, j);
+        if (functionName.equals(PlotterUtilities.speedFunction)) {
+            previousFunctionName = "";
+        }
 
         performFunctionActions();
     }
@@ -445,7 +460,7 @@ public class PlotterController {
      * function was pressed
      */
     private void performFunctionActions() {
-        if (functionName.equals(PlotterUtilities.speedFunction)) {
+        if (functionName.equals(PlotterUtilities.speedFunction) && !previousFunctionName.equals(PlotterUtilities.speedFunction)) {
             Scene original = stage.getScene();
 
             GridPane grid = new GridPane();
@@ -457,16 +472,37 @@ public class PlotterController {
             Scene scene = new Scene(grid, 300, 275);
             stage.setScene(scene);
 
-            Text scenetitle = new Text("Enter speed input");
-            grid.add(scenetitle, 0, 0, 2, 1);
+            Text sceneTitle = new Text("Please enter a speed");
+            grid.add(sceneTitle, 0, 0, 2, 1);
 
-            Label userName = new Label("Enter speed:");
+            Label userName = new Label("Enter speed in kph");
             grid.add(userName, 0, 1);
 
             TextField userTextField = new TextField();
+            userTextField.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent keyEvent) {
+                    if (keyEvent.getCode() == KeyCode.ENTER){
+                        String input = userTextField.getText();
+                        if (!validate(input)){
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "\"" + input + "\" is not a valid speed. Enter a valid speed and try again.", ButtonType.OK);
+                            alert.setHeaderText("Invalid Speed Entered.");
+                            alert.showAndWait();
+                        } else {
+                            speedInput = Double.parseDouble(input);
+                            speedTable.setSpeed(speedInput);
+                            stage.setScene(original);
+                            mapArea.getChildren().clear();
+                            redrawMap();
+                            mapArea.getChildren().add(table);
+                            mapArea.getChildren().add(speedTable);
+                        }
+                    }
+                }
+            });
             grid.add(userTextField, 1, 1);
 
-            Button btn = new Button("Submit");
+            Button btn = new Button("Confirm");
             HBox hbBtn = new HBox(10);
             hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
             hbBtn.getChildren().add(btn);
@@ -475,12 +511,20 @@ public class PlotterController {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
-                    //validate(userTextField.getText());
-                    speedInput = Double.parseDouble(userTextField.getText());
-                    stage.setScene(original);
-                    mapArea.getChildren().clear();
-                    redrawMap();
-                    mapArea.getChildren().add(table);
+                    String input = userTextField.getText();
+                    if (!validate(input)){
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "\"" + input + "\" is not a valid speed. Enter a valid speed and try again.", ButtonType.OK);
+                        alert.setHeaderText("Invalid Speed Entered.");
+                        alert.showAndWait();
+                    } else {
+                        speedInput = Double.parseDouble(input);
+                        speedTable.setSpeed(speedInput);
+                        stage.setScene(original);
+                        mapArea.getChildren().clear();
+                        redrawMap();
+                        mapArea.getChildren().add(table);
+                        mapArea.getChildren().add(speedTable);
+                    }
                 }
             });
         } else if (functionName.equals(PlotterUtilities.gradeFunction)) {
@@ -494,6 +538,19 @@ public class PlotterController {
             redrawMap();
             mapArea.getChildren().add(table);
         }
+        if(functionName.equals(PlotterUtilities.speedFunction) && !mapArea.getChildren().contains(speedTable)){
+            mapArea.getChildren().add(speedTable);
+        }
+        previousFunctionName = functionName;
+    }
+
+    private static boolean validate(String text) {
+        try {
+            Double.parseDouble(text);
+        } catch (NumberFormatException e){
+            return false;
+        }
+        return true;
     }
 
     public void setStage(Stage plotter) {
