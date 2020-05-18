@@ -538,6 +538,9 @@ public class PlotterController {
             redrawMap();
             mapArea.getChildren().add(table);
         }
+        if(functionName.equals(PlotterUtilities.speedFunction) && !mapArea.getChildren().contains(speedTable)){
+            mapArea.getChildren().add(speedTable);
+        }
         previousFunctionName = functionName;
     }
 
