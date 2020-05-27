@@ -3,7 +3,7 @@ package plotter;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-
+//MLH: No comments at all!
 public class PlotterUtilities {
 
     public static final String gradeFunction = "grade";

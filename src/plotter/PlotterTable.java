@@ -24,6 +24,7 @@ public class PlotterTable extends CanvasLayer {
     private GraphicsContext gc = this.getGraphicsContext2D();
     private static double MAP_DIMENSIONS = 500;
 
+    //MLH: Public methods should have complete javadoc
     PlotterTable(List<Track> tracks) {
         super(null, MAP_DIMENSIONS);
         list = new ArrayList<>();

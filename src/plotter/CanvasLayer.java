@@ -43,6 +43,8 @@ public class CanvasLayer extends Canvas {
 
     private ArrayList<Integer> gradeArray;// = new ArrayList<>();
     private ArrayList<Double> speedArray;// = new ArrayList<>();
+    
+    //MLH: Public methods should have complete javadoc
 
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
         super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);

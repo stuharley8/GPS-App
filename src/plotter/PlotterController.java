@@ -75,6 +75,7 @@ public class PlotterController {
     private double speedInput = 0;
     private Stage stage;
 
+    //MLH: Public methods should have complete javadoc
     public void setTracks(List<Track> tracks) {
         colors.put(0, Color.RED);
         colors.put(1, Color.ORANGE);
