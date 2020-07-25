@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>Distance: 1 km</name>
+    <trkseg>
+      <trkpt lat="41.660375" lon="-88.2036963">
+        <ele>500.0000000000000</ele>
+        <time>2016-02-10T13:00:00Z</time>
+      </trkpt>
+      <trkpt lat="41.6693603" lon="-88.2040808">
+        <ele>500.0000000000000</ele>
+        <time>2016-02-10T13:01:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

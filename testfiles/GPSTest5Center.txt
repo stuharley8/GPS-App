@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>gps Test: 5 points outlining a rectangle. 38464 meters/23.9 miles</name>
+    <trkseg>
+      <trkpt lat="43.30000000000000" lon="-87.90000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T13:00:00Z</time>
+      </trkpt>
+      <trkpt lat="43.30000000000000" lon="-88.00000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T13:10:00Z</time>
+      </trkpt>
+      <trkpt lat="43.40000000000000" lon="-88.00000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T13:20:00Z</time>
+      </trkpt>
+      <trkpt lat="43.40000000000000" lon="-87.90000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T13:30:00Z</time>
+      </trkpt>
+      <trkpt lat="43.30000000000000" lon="-87.90000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T13:40:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
