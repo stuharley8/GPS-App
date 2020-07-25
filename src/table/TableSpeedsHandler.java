@@ -10,9 +10,6 @@ package table;
 
 import gps.Track;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 /**
  * Class handles calculating the metrics displayed to the table
  */
@@ -46,7 +43,7 @@ public class TableSpeedsHandler {
             double minutes = seconds / 60;
             double hours = minutes / 60;
             totalMin += minutes;
-            double miles = track.distanceCalc(track.getPoint(i), track.getPoint(i+1)) * KM_TO_MILES;
+            double miles = Track.distanceCalc(track.getPoint(i), track.getPoint(i+1)) * KM_TO_MILES;
             double mph = miles/hours;
             if(mph < 3) {
                 threeLessMin += minutes;
@@ -65,56 +62,50 @@ public class TableSpeedsHandler {
     }
 
     public double getThreeLessMin() {
-        return round(threeLessMin, 2);
+        return TableController.round(threeLessMin, 2);
     }
 
     public double getSevenLessMin() {
-        return round(sevenLessMin, 2);
+        return TableController.round(sevenLessMin, 2);
     }
 
     public double getTenLessMin() {
-        return round(tenLessMin, 2);
+        return TableController.round(tenLessMin, 2);
     }
 
     public double getFifteenLessMin() {
-        return round(fifteenLessMin, 2);
+        return TableController.round(fifteenLessMin, 2);
     }
 
     public double getTwentyLessMin() {
-        return round(twentyLessMin, 2);
+        return TableController.round(twentyLessMin, 2);
     }
 
     public double getTwentyGreaterMin() {
-        return round(twentyGreaterMin, 2);
+        return TableController.round(twentyGreaterMin, 2);
     }
 
     public double getPercentThreeLess() {
-        return round(threeLessMin/totalMin*100, 2);
+        return TableController.round(threeLessMin/totalMin*100, 2);
     }
 
     public double getPercentSevenLess() {
-        return round(sevenLessMin/totalMin*100, 2);
+        return TableController.round(sevenLessMin/totalMin*100, 2);
     }
 
     public double getPercentTenLess() {
-        return round(tenLessMin/totalMin*100, 2);
+        return TableController.round(tenLessMin/totalMin*100, 2);
     }
 
     public double getPercentFifteenLess() {
-        return round(fifteenLessMin/totalMin*100, 2);
+        return TableController.round(fifteenLessMin/totalMin*100, 2);
     }
 
     public double getPercentTwentyLess() {
-        return round(twentyLessMin/totalMin*100, 2);
+        return TableController.round(twentyLessMin/totalMin*100, 2);
     }
 
     public double getPercentTwentyGreater() {
-        return round(twentyGreaterMin/totalMin*100, 2);
-    }
-
-    private double round(double value, int places) {
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+        return TableController.round(twentyGreaterMin/totalMin*100, 2);
     }
 }

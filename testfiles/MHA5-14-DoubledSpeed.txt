@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>Speed doubles </name>
+    <trkseg>
+      <trkpt lat="43.30000000000000" lon="-87.90000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T15:00:00Z</time>
+      </trkpt>
+      <trkpt lat="43.30000000000000" lon="-87.90800000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T15:05:00Z</time>
+      </trkpt>
+      <trkpt lat="43.30000000000000" lon="-87.94000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2010-10-19T15:15:00Z</time>
+      </trkpt>
+
+    </trkseg>
+  </trk>
+</gpx>

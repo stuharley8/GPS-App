@@ -11,8 +11,11 @@ package plotter;
 import gps.Point;
 import gps.Track;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,16 +30,36 @@ public class CanvasLayer extends Canvas {
     private double minY;
     private double maxY;
 
+    private double minLatitude;
+    private double maxLatitude;
+    private double minLongitude;
+    private double maxLongitude;
+    private Color color;
+
     private String name;
     private double originX;
     private double originY;
+    private boolean isSelected;
+
+    private ArrayList<Integer> gradeArray;// = new ArrayList<>();
+    private ArrayList<Double> speedArray;// = new ArrayList<>();
+    
+    //MLH: Public methods should have complete javadoc
 
     public CanvasLayer(Track track, double MAP_DIMENSIONS) {
-        super(MAP_DIMENSIONS * 2, MAP_DIMENSIONS * 2);
+        super(MAP_DIMENSIONS + 10, MAP_DIMENSIONS + 10);
+
+        isSelected = true;
         if (track == null) {
             this.name = "map element";
         } else {
+            gradeArray = new ArrayList<>();
+            speedArray = new ArrayList<>();
             this.name = track.getName();
+            minLatitude = track.getMinLatitude();
+            maxLatitude = track.getMaxLatitude();
+            minLongitude = track.getMinLongitude();
+            maxLongitude = track.getMaxLongitude();
             convertPointsToXY(track);
         }
     }
@@ -59,6 +82,8 @@ public class CanvasLayer extends Canvas {
 
         for (int i = 1; i < points.size(); ++i) {
             double array[] = deltaCoordinateConversion(points.get(i - 1), points.get(i), prevX, prevY);
+            insertGradeIntoArray(points.get(i - 1), points.get(i));
+
             xyCoordinatesFromOffset.add(array);
             prevX = array[0];
             prevY = array[1];
@@ -78,13 +103,36 @@ public class CanvasLayer extends Canvas {
         }
     }
 
+
+    private void insertGradeIntoArray(Point a, Point b) {
+        double grade = Track.gradeCalc(a, b);
+        double time = calculateTime(a, b);
+        double distance = Track.distanceCalc(a, b);
+        double speed = distance / (time / 60);
+        speedArray.add(speed);
+
+        if (grade < -5) {
+            gradeArray.add(0);
+        } else if (grade >= -5 && grade < -1) {
+            gradeArray.add(1);
+        } else if (grade >= -1 && grade < 1) {
+            gradeArray.add(2);
+        } else if (grade >= 1 && grade < 3) {
+            gradeArray.add(3);
+        } else if (grade >= 3 && grade < 5) {
+            gradeArray.add(4);
+        } else {
+            gradeArray.add(5);
+        }
+    }
+
     /**
      * Converts from polar coordinates to cartesian
      *
      * @param point current point
      * @return
      */
-    private double[] singleCoordinateConversion(Point point) {
+    private static double[] singleCoordinateConversion(Point point) {
 //        double r = 6378137 + (Math.toRadians(point.getElevation()));
         double r = 6378137;
         double X = r * (Math.toRadians(point.getLongitude())) * Math.cos(Math.toRadians(point.getLatitude()));
@@ -102,7 +150,7 @@ public class CanvasLayer extends Canvas {
      * @param prevY    previous point's converted y value
      * @return
      */
-    private double[] deltaCoordinateConversion(Point previous, Point current, double prevX, double prevY) {
+    private static double[] deltaCoordinateConversion(Point previous, Point current, double prevX, double prevY) {
         double prevLong = Math.toRadians(previous.getLongitude());
         double prevLat = Math.toRadians(previous.getLatitude());
         double currentLong = Math.toRadians(current.getLongitude());
@@ -146,4 +194,51 @@ public class CanvasLayer extends Canvas {
     public double getMaxY() {
         return maxY;
     }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
+    }
+
+    public double getMinLatitude() {
+        return minLatitude;
+    }
+
+    public double getMaxLatitude() {
+        return maxLatitude;
+    }
+
+    public double getMinLongitude() {
+        return minLongitude;
+    }
+
+    public double getMaxLongitude() {
+        return maxLongitude;
+    }
+
+    public Color getColor(String functionName, int index) {
+        if (functionName.equals(PlotterUtilities.gradeFunction)) {
+            return PlotterUtilities.getColor(gradeArray.get(index));
+        }
+        return color;
+    }
+
+    public double getSpeedAtIndex(int index) {
+        return speedArray.get(index);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    private double calculateTime(Point pointA, Point pointB) {
+        long totalTime = Math.abs(pointB.getDate().getTime() - pointA.getDate().getTime());
+        double seconds = totalTime / 1000.0;
+        return seconds / 60;
+    }
+
+
 }

@@ -11,6 +11,7 @@
                 <Menu mnemonicParsing="false" text="Data Select">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#selectData" text="Times at Various Speeds" />
+                  <MenuItem mnemonicParsing="false" onAction="#selectData" text="Times at Various Grades" />
                     </items>
                 </Menu>
                 <Menu fx:id="trackSelectMenu" mnemonicParsing="false" onAction="#selectTrack" text="Track Select" />

@@ -12,6 +12,7 @@ import gps.*;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 import table.TableSpeedsHandler;
+import table.TableTimesAtGradesHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -498,7 +499,69 @@ public class JUnitTest {
         assertEquals(tsh.getPercentSevenLess(), 3.23, DELTA);
         assertEquals(tsh.getPercentTenLess(), 6.45, DELTA);
         assertEquals(tsh.getPercentFifteenLess(), 12.9, DELTA);
-        assertEquals(tsh.getPercentTwentyLess(), 25.81 ,DELTA);
+        assertEquals(tsh.getPercentTwentyLess(), 25.81, DELTA);
         assertEquals(tsh.getPercentTwentyGreater(), 51.61, DELTA);
+    }
+
+    /**
+     * Tests the table to see if it is displaying the correct info
+     */
+    @Test
+    public void testTimesAtVariousGradesTable() {
+        TableTimesAtGradesHandler tgh = null;
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\MHA5-3-All60.txt");
+            tgh = new TableTimesAtGradesHandler(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(tgh.getNegFiveLessMin(), 60);
+        assertEquals(tgh.getNegOneLessMin(), 60);
+        assertEquals(tgh.getOneLessMin(), 60);
+        assertEquals(tgh.getThreeLessMin(), 60);
+        assertEquals(tgh.getFiveLessMin(), 60);
+        assertEquals(tgh.getFiveGreaterMin(), 60);
+        assertEquals(tgh.getPercentNegFiveLess(), 16.67, DELTA);
+        assertEquals(tgh.getPercentNegOneLess(), 16.67, DELTA);
+        assertEquals(tgh.getPercentOneLess(), 16.67, DELTA);
+        assertEquals(tgh.getPercentThreeLess(), 16.67, DELTA);
+        assertEquals(tgh.getPercentFiveLess(), 16.67 ,DELTA);
+        assertEquals(tgh.getPercentFiveGreater(), 16.67, DELTA);
+    }
+
+    /**
+     * Tests the table to see if it is displaying the correct info. The times double every row
+     */
+    @Test
+    public void testTimesAtVariousGradesTableDoubles() {
+        TableTimesAtGradesHandler tgh = null;
+        GPSTrackBuilder gpsTrackBuilder = new GPSTrackBuilder();
+        AbstractParserEventHandler handler = gpsTrackBuilder;
+        handler.enableLogging(true);
+        Parser parser;
+        try {
+            parser = new Parser(handler);
+            parser.parse("testfiles\\MHA5-3-Doubles.gpx");
+            tgh = new TableTimesAtGradesHandler(gpsTrackBuilder.loadedTrack());
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(tgh.getNegFiveLessMin(), 0);
+        assertEquals(tgh.getNegOneLessMin(), 10);
+        assertEquals(tgh.getOneLessMin(), 20);
+        assertEquals(tgh.getThreeLessMin(), 40);
+        assertEquals(tgh.getFiveLessMin(), 80);
+        assertEquals(tgh.getFiveGreaterMin(), 160);
+        assertEquals(tgh.getPercentNegFiveLess(), 0, DELTA);
+        assertEquals(tgh.getPercentNegOneLess(), 3.23, DELTA);
+        assertEquals(tgh.getPercentOneLess(), 6.45, DELTA);
+        assertEquals(tgh.getPercentThreeLess(), 12.9, DELTA);
+        assertEquals(tgh.getPercentFiveLess(), 25.81, DELTA);
+        assertEquals(tgh.getPercentFiveGreater(), 51.61, DELTA);
     }
 }
