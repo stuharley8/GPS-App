@@ -3,7 +3,8 @@ SE2030 and SE2040 (Software Engineering Tools and Practices, Software Engineerin
 <br><br>
 Takes in .gpx/.txt files containing gps data and displays various metrics, plots, and graphs from the data. This project was used to further practice Git and team based coding as well as an introduction to Scrum practices.
 <br><br>
-Below are screenshots respectively of the main screen, the plotting functionality, the graphing functionality, and the table functionality of our app.
+Below are screenshots of the main screen, the plotting functionality, the graphing functionality, and the table functionality of our app, respectively.
+<br><br>
 ![main_screen](./images/main_screen.PNG)
 <br><br>
 ![plot](./images/plot.PNG)
